@@ -12,9 +12,14 @@ all theta for interface
 Can get theta at every point on interface, or point by point, based on if x_prime, y_prime are scalars, or the entire set x(t), y(t)
 '''
 def get_theta(x_prime,y_prime):
+	print 'lo'
+	print len(x_prime)
+	print len(y_prime)
 	cos_theta = np.divide(y_prime,np.power(np.power(x_prime,2)+np.power(y_prime,2),.5) +math.pow(10.0,-14))
 	#sin_theta = np.divide(-x_prime ,np.power(np.power(x_prime,2)+np.power(y_prime,2),.5) +math.pow(10.0,-14))
 	theta = np.arccos(cos_theta)
+	print 'lulk'
+	print len(theta)
 	return theta
 
 

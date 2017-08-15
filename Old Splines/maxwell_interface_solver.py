@@ -2,6 +2,7 @@ from pde import *
 import math
 import pylab as plt
 import scipy.interpolate as inter
+from transformcor import *
 
 '''
 Geneate Mesh and Set CFL condition for our problem.
@@ -15,7 +16,8 @@ d=1
 #set time
 t0=0.0
 t1=10.0
-n=101
+nx=101
+ny=101
 n_time=100
 spatial_step_x=(b-a)/float(n)
 spatial_step_y=(d-c)/float(n)
@@ -34,6 +36,7 @@ dummy_dt = (t1-t0)/float(n_time)
 #print dummy_dt
 
 #our guess for time step to keep with CFL condition
+#stab short for stability
 stab = math.sqrt(spatial_step_x**2 + spatial_step_y**2)*(1.0/(dummy_dt*c_max))
 #try to take biggest time step possible, while keeping CFL condition.
 while(stab<1):
@@ -46,8 +49,8 @@ spatial_step_t=dummy_dt
 n_time = int((t1-t0)/spatial_step_x)+1
 
 #construct spatial and time dimension.
-x_list=onedinterval(a,b,n)
-y_list=onedinterval(c,d,n)
+x_list=onedinterval(a,b,nx)
+y_list=onedinterval(c,d,ny)
 t_list=onedinterval(t0,t1,n_time)
 
 '''
@@ -70,11 +73,16 @@ y_func = lambda p : yo + r*math.sin(2.0*math.pi*p)
 def generate_paramterization(x_func,y_func,t_list):
 	x_list=[]
 	y_list=[]
+	print 'info'
+	print len(t_list)
+
 
 	for i in t_list:
 		x_list.append(x_func(i))
 		y_list.append(y_func(i))
 
+
+	print (len(x_list),len(y_list))
 	return (x_list,y_list)
 
 def generate_spline_2d(xval,yval):
@@ -113,4 +121,9 @@ curvature = generate_curveature(x_param,y_param)
 #plot interface
 #plt.plot(x_param,y_param)
 #plt.show()
+theta = get_theta(t_x,t_y)
+
+
+
+
 
