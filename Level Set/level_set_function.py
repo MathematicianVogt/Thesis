@@ -44,31 +44,48 @@ class level_set_function:
 		return int(phi_min*phi_max<= 0)
 
 	def phi_min(self,i,j):
+		xmm = self.mesh.return_point_on_mesh(i-2,j)
 		xm = self.mesh.return_point_on_mesh(i-1,j)
+		xpp = self.mesh.return_point_on_mesh(i+2,j)
 		xp = self.mesh.return_point_on_mesh(i+1,j)
+		ymm=self.mesh.return_point_on_mesh(i,j-2)
 		ym=self.mesh.return_point_on_mesh(i,j-1)
+		ypp=self.mesh.return_point_on_mesh(i,j+2)
 		yp=self.mesh.return_point_on_mesh(i,j+1)
-
+		
+		phixmm=self.evaluate_min(xmm[0],xmm[1])
 		phixm = self.evaluate_min(xm[0],xm[1])
+		phixpp=self.evaluate_min(xpp[0],xpp[1])
 		phixp = self.evaluate_min(xp[0],xp[1])
+		phiymm=self.evaluate_min(ymm[0],ymm[1])
 		phiym = self.evaluate_min(ym[0],ym[1])
+		phiypp=self.evaluate_min(ypp[0],ypp[1])
 		phiyp = self.evaluate_min(yp[0],xp[1])
-		return min(phixm,phixp,phiym,phiyp)
+		return min(phixmm,phixm, phixpp,phixp,phiymm,phiym,phiypp,phiyp)
 
 	def phi_max(self,i,j):
+		xmm = self.mesh.return_point_on_mesh(i-2,j)
 		xm = self.mesh.return_point_on_mesh(i-1,j)
+		xpp = self.mesh.return_point_on_mesh(i+2,j)
 		xp = self.mesh.return_point_on_mesh(i+1,j)
+		ymm=self.mesh.return_point_on_mesh(i,j-2)
 		ym=self.mesh.return_point_on_mesh(i,j-1)
+		ypp=self.mesh.return_point_on_mesh(i,j+2)
 		yp=self.mesh.return_point_on_mesh(i,j+1)
-
+		
+		phixmm=self.evaluate_max(xmm[0],xmm[1])
 		phixm = self.evaluate_max(xm[0],xm[1])
+		phixpp=self.evaluate_max(xpp[0],xpp[1])
 		phixp = self.evaluate_max(xp[0],xp[1])
+		phiymm=self.evaluate_max(ymm[0],ymm[1])
 		phiym = self.evaluate_max(ym[0],ym[1])
+		phiypp=self.evaluate_max(ypp[0],ypp[1])
 		phiyp = self.evaluate_max(yp[0],xp[1])
-		return max(phixm,phixp,phiym,phiyp)
+		return max(phixmm,phixm, phixpp,phixp,phiymm,phiym,phiypp,phiyp)
 
 
-
+## taking perspective h'=2h
+## then h'/2 = h. This way we can index by integers. 
 
 
 
