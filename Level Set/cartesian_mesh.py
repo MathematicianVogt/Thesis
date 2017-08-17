@@ -29,6 +29,7 @@ class cartesian_mesh:
 
 	def size(self):
 		return np.shape(self.mesh)
+	#spatial steps
 	def h(self):
 		dx = 2.0*(self.x[1]-self.x[0])
 		dy=2.0*(self.y[1]-self.y[0])
@@ -37,6 +38,7 @@ class cartesian_mesh:
 		dx = (self.x[1]-self.x[0])
 		dy=(self.y[1]-self.y[0])
 		return (dx,dy)
+
 
 x = cartesian_mesh(0.0,1.0,0.0,2.0,100,99)
 print x.return_point_on_mesh(0,98)
