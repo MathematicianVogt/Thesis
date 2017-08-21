@@ -14,15 +14,18 @@ class cartesian_mesh:
 		self.xx,self.yy = np.meshgrid(self.x, self.y, indexing = 'ij')
 		self.mesh = (self.xx,self.yy)
 	
-	def x(self):
+	def x_list(self):
 		return self.xx
-	def y(self):
+	def y_list(self):
 		return self.yy
 
 	def return_point_on_mesh(self,i,j):
 		
+		if(i<0 or j <0):
+			return (None,None)
+
 		try:
-			return (self.xx[i,j],self.yy[i,j])
+			return (self.x[i],self.y[j])
 		except:
 			return (None,None)
 
@@ -40,6 +43,6 @@ class cartesian_mesh:
 		return (dx,dy)
 
 
-x = cartesian_mesh(0.0,1.0,0.0,2.0,100,99)
-print x.return_point_on_mesh(0,98)
-print x.size()
+# x = cartesian_mesh(0.0,1.0,0.0,2.0,100,99)
+# print x.return_point_on_mesh(0,98)
+# print x.size()

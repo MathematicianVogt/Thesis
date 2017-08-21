@@ -18,7 +18,7 @@ class level_set_function:
 
 			for j in range(0,ysize):
 				mesh_numbering[i,j] = self.regular_or_irregular(i,j)
-				print (i,j)
+				#print (i,j)
 
 
 
@@ -41,6 +41,11 @@ class level_set_function:
 		phi_min = self.phi_min(i,j)
 		phi_max = self.phi_max(i,j)
 
+
+		# if j==0:
+		# 	print (phi_min,phi_max,i,j)
+		# 	print self.mesh.return_point_on_mesh(i,j)
+
 		return int(phi_min*phi_max<= 0)
 
 	def phi_min(self,i,j):
@@ -60,7 +65,7 @@ class level_set_function:
 		phiymm=self.evaluate_min(ymm[0],ymm[1])
 		phiym = self.evaluate_min(ym[0],ym[1])
 		phiypp=self.evaluate_min(ypp[0],ypp[1])
-		phiyp = self.evaluate_min(yp[0],xp[1])
+		phiyp = self.evaluate_min(yp[0],yp[1])
 		return min(phixmm,phixm, phixpp,phixp,phiymm,phiym,phiypp,phiyp)
 
 	def phi_max(self,i,j):
@@ -80,7 +85,11 @@ class level_set_function:
 		phiymm=self.evaluate_max(ymm[0],ymm[1])
 		phiym = self.evaluate_max(ym[0],ym[1])
 		phiypp=self.evaluate_max(ypp[0],ypp[1])
-		phiyp = self.evaluate_max(yp[0],xp[1])
+		phiyp = self.evaluate_max(yp[0],yp[1])
+		if j==0:
+			print ymm
+			print ym
+			print [phixmm,phixm, phixpp,phixp,phiymm,phiym,phiypp,phiyp]
 		return max(phixmm,phixm, phixpp,phixp,phiymm,phiym,phiypp,phiyp)
 
 
