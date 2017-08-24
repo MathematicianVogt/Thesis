@@ -19,6 +19,10 @@ class cartesian_mesh:
 	def y_list(self):
 		return self.yy
 
+	def one_d_x(self):
+		return self.x
+	def one_d_y(self):
+		return self.y
 	def return_point_on_mesh(self,i,j):
 		
 		if(i<0 or j <0):

@@ -7,8 +7,8 @@ class maxwell_solver_2d_circle:
 	def __init__(self,r,xo,yo,a,b,c,d,nx,ny):
 		
 		self.mesh  = cartesian_mesh(a,b,c,d,nx,ny)
-		phi = lambda x,y:y
-		#phi = lambda x,y:math.sqrt((x-xo)**2 +(y-yo)**2) - r
+		#phi = lambda x,y:y
+		phi = lambda x,y:math.sqrt((x-xo)**2 +(y-yo)**2) - r
 		self.phi = level_set_function(phi,self.mesh)
 	def plot_mesh(self):
 		mesh = self.mesh
