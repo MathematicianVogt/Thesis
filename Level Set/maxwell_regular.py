@@ -77,6 +77,12 @@ class maxwell_reg:
 					if time_mesh[t]==0:
 						try:
 							sol1[i,j+1] = ic1[i,j+1] - (dt/(self.mu(self.x_list[i],self.y_list[j+1])*dy))*(ic3[i,j+2] - ic3[i,j])
+							
+						except: 
+							pass
+
+
+						try:
 							sol2[i+1,j] = ic2[i+1,j] + (dt/(self.mu(self.x_list[i+1],self.y_list[j])*dx))*(ic3[i+2,j] - ic3[i,j])
 
 
@@ -89,17 +95,28 @@ class maxwell_reg:
 						hx_n=hx[-1]
 						hy_n=hy[-1]
 						ez_n=ez[-1]
+						try:
+							sol1[i,j+1] = hx_n[i,j+1] - (dt/(self.mu(self.x_list[i],self.y_list[j+1])*dy))*(ez_n[i,j+2] - ez_n[i,j])
+						except:
+							pass
 
-						sol1[i,j+1] = hx_n[i,j+1] - (dt/(self.mu(self.x_list[i],self.y_list[j+1])*dy))*(ez_n[i,j+2] - ez_n[i,j])
-						sol2[i+1,j] = hy_n[i+1,j] + (dt/(self.mu(self.x_list[i+1],self.y_list[j])*dx))*(ez_n[i+2,j] - ez_n[i,j])
-						
+						try:
+							sol2[i+1,j] = hy_n[i+1,j] + (dt/(self.mu(self.x_list[i+1],self.y_list[j])*dx))*(ez_n[i+2,j] - ez_n[i,j])
+						except:
+							pass
 
 			for i in range(0,self.xsize)
 				for j in range(0,ysize):
 					
 					if time_mesh[t]==0:
 						try:
-							sol3[i,j] = ic3[i,j] + (dt/(self.epsilon(self.x_list[i],self.y_list[j])*dx))*( ((ic2[i+1,j]  -ic2[i-1,j]))/dx   - ((ic1[i,j+1] -ic1[i,j-1])/dy)      )
+							
+							if(i-1<0 or j-1<0):
+								raise Exception("Problem in X Y")
+							else:
+								sol3[i,j] = ic3[i,j] + (dt/(self.epsilon(self.x_list[i],self.y_list[j])*dx))*( ((ic2[i+1,j]  -ic2[i-1,j]))/dx   - ((ic1[i,j+1] -ic1[i,j-1])/dy)      )
+						
+
 						except:
 							pass
 					else:
@@ -107,7 +124,11 @@ class maxwell_reg:
 						hy_n=hy[-1]
 						ez_n=ez[-1]
 
-						sol3[i,j] = ez_n[i,j] + (dt/(self.epsilon(self.x_list[i],self.y_list[j])*dx))*( ((hy_n[i+1,j]  -hy_n[i-1,j]))/dx   - ((hx_n[i,j+1] -hx_n[i,j-1])/dy)      )
+						if(i-1<0 or j-1<0):
+								raise Exception("Problem in X Y")
+						else:
+
+							sol3[i,j] = ez_n[i,j] + (dt/(self.epsilon(self.x_list[i],self.y_list[j])*dx))*( ((hy_n[i+1,j]  -hy_n[i-1,j]))/dx   - ((hx_n[i,j+1] -hx_n[i,j-1])/dy)      )
 						
 
 
@@ -196,6 +217,9 @@ class maxwell_reg:
 					
 					if time_mesh[t]==0:
 						try:
+							
+
+
 							sol3[i+1,j+1] = ic3[i+1,j+1] + (dt/(self.mu(self.x_list[i+1],self.y_list[j+1])*dx))*( ((ic1[i+1,j+2]  -ic1[i+1,j]))/dy   - ((ic2[i+2,j+1] -ic2[i,j+1])/dx)      )
 						except:
 							pass
@@ -204,8 +228,10 @@ class maxwell_reg:
 						ey_n=ey[-1]
 						hz_n=hz[-1]
 
-						sol3[i+1,j+1] = hz_n[i+1,j+1] + (dt/(self.mu(self.x_list[i+1],self.y_list[j+1])*dx))*( ((ex_n[i+1,j+1]  -ex_n[i+1,j]))/dy  - ((ey_n[i+2,j+1] -ey_n[i,j+1])/dy)      )
-						
+						try:
+							sol3[i+1,j+1] = hz_n[i+1,j+1] + (dt/(self.mu(self.x_list[i+1],self.y_list[j+1])*dx))*( ((ex_n[i+1,j+1]  -ex_n[i+1,j]))/dy  - ((ey_n[i+2,j+1] -ey_n[i,j+1])/dy)      )
+						except:
+							pass
 
 
 			ex.append(sol1)
@@ -213,7 +239,6 @@ class maxwell_reg:
 			hz.append(sol3)
 
 
-#DID FOR TE UP TO SOL 3
 
 	def source_tm(self.xi,yj):
 
