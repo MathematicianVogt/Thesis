@@ -1,8 +1,8 @@
 import numpy as np
 class time_mesh:
 	def __init__(self,T,nt):
-		self.t_mesh = np.linespace(0,T,nt)
-		self.dt = t_mesh[1]-t_mesh[0]
+		self.t_mesh = np.linspace(0,T,nt)
+		self.dt = self.t_mesh[1]-self.t_mesh[0]
 
 	def time_step(self):
 		return 2.0*self.dt
@@ -13,5 +13,7 @@ class time_mesh:
 		return self.t_mesh[i]
 	def size(self):
 		return length(self.t_mesh)
+	def mesh(self):
+		return self.t_mesh
 		
 

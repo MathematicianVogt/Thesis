@@ -4,14 +4,16 @@ import matplotlib.pyplot as plt
 import math
 from compare_exact_numerical import compare_exact_numerical_2D
 from time_mesh import time_mesh
+import numpy as np
 
 
 #assumption is that boundary conditions are direchlet 
 class maxwell_reg:
-	def __init__(a,b,c,d,nx,ny,Tmax,nt,BC_list,epsilon,mu,ic_list,source_tm=[lambda (x,y,t):0,lambda (x,y,t):0,lambda (x,y,t):0],source_te=[lambda (x,y,t):0,lambda (x,y,t):0,lambda (x,y,t):0]):
+	def __init__(self,a,b,c,d,nx,ny,Tmax,nt,BC_list,epsilon,mu,ic_list,source_tm,source_te):
 		self.spatial_mesh = cartesian_mesh(a,b,c,d,nx,ny)
 		self.time_mesh = time_mesh(Tmax,nt)
-		self.dx,self.dy = self.mesh.h()
+		self.time_mesh =self.time_mesh.mesh()
+		self.dx,self.dy = self.spatial_mesh.h()
 		self.dt = self.time_mesh[1]-self.time_mesh[0]
 		self.BC=BC_list
 		self.epsilon = epsilon
@@ -26,12 +28,12 @@ class maxwell_reg:
 		self.source_te= source_te
 	#return the lambda function associated with the (i+1) equation i.e self.BC["top"][0] 
 	#will return the top boundary condition for the first equation. 
-	def get_boundary_condition(position,ith_equation):
+	def get_boundary_condition(self,position,ith_equation):
 		boundary_condition=self.BC[position]
 		return boundary_condition[ith_equation]
 	
 
-	def initial_condition():
+	def initial_condition(self):
 		ic_list=self.ic_list
 		ic1=ic_list[0]
 		ic2=ic_list[1]
@@ -49,9 +51,9 @@ class maxwell_reg:
 				initial_mesh_2[i,j] = ic2(x_list[i],y_list[j])
 				initial_mesh_3[i,j] = ic3(x_list[i],y_list[j])
 
-		return (initial_mesh_1.initial_mesh_2,initial_mesh_3)
+		return (initial_mesh_1,initial_mesh_2,initial_mesh_3)
 
-	def yee_method_TM():
+	def yee_method_TM(self):
 		hx=[]
 		hy=[]
 		ez=[]
@@ -69,20 +71,21 @@ class maxwell_reg:
 
 		#half time step for first two, full time step for others 
 		for t in range(1,len(self.time_mesh)):
+			print "time:" + str(self.time_mesh[t])
 			(sol1,sol2,sol3) = self.enforce_boundary_conditons(self.time_mesh[t])
-			for i in range(0,self.xsize)
+			for i in range(0,self.xsize):
 				for j in range(0,ysize):
 					#first time step
 					if t==1:
 						try:
-							sol1[i,j+1] = ic1[i,j+1] - (dt/(self.mu(self.x_list[i],self.y_list[j+1])*dy))*(ic3[i,j+2] - ic3[i,j]) + s1(self.x_list[i],self.y_list[j], self.time_mesh[t])
+							sol1[i,j+1] = ic1[i,j+1] - (dt/(self.mu(self.x_list[i],self.y_list[j+1],self.time_mesh[t])*dy))*(ic3[i,j+2] - ic3[i,j]) + s1(self.x_list[i],self.y_list[j], self.time_mesh[t])
 							
 						except: 
 							pass
 
 
 						try:
-							sol2[i+1,j] = ic2[i+1,j] + (dt/(self.mu(self.x_list[i+1],self.y_list[j])*dx))*(ic3[i+2,j] - ic3[i,j]) +  s2(self.x_list[i],self.y_list[j],self.time_mesh[t])
+							sol2[i+1,j] = ic2[i+1,j] + (dt/(self.mu(self.x_list[i+1],self.y_list[j],self.time_mesh[t])*dx))*(ic3[i+2,j] - ic3[i,j]) +  s2(self.x_list[i],self.y_list[j],self.time_mesh[t])
 
 
 
@@ -95,16 +98,16 @@ class maxwell_reg:
 						hy_n=hy[-1]
 						ez_n=ez[-1]
 						try:
-							sol1[i,j+1] = hx_n[i,j+1] - (dt/(self.mu(self.x_list[i],self.y_list[j+1])*dy))*(ez_n[i,j+2] - ez_n[i,j]) +  s1(self.x_list[i],self.y_list[j],self.time_mesh[t])
+							sol1[i,j+1] = hx_n[i,j+1] - (dt/(self.mu(self.x_list[i],self.y_list[j+1],self.time_mesh[t])*dy))*(ez_n[i,j+2] - ez_n[i,j]) +  s1(self.x_list[i],self.y_list[j],self.time_mesh[t])
 						except:
 							pass
 
 						try:
-							sol2[i+1,j] = hy_n[i+1,j] + (dt/(self.mu(self.x_list[i+1],self.y_list[j])*dx))*(ez_n[i+2,j] - ez_n[i,j]) + s2(self.x_list[i],self.y_list[j],self.time_mesh[t])
+							sol2[i+1,j] = hy_n[i+1,j] + (dt/(self.mu(self.x_list[i+1],self.y_list[j],self.time_mesh[t])*dx))*(ez_n[i+2,j] - ez_n[i,j]) + s2(self.x_list[i],self.y_list[j],self.time_mesh[t])
 						except:
 							pass
 
-			for i in range(0,self.xsize)
+			for i in range(0,self.xsize):
 				for j in range(0,ysize):
 					
 					if t==1:
@@ -113,7 +116,7 @@ class maxwell_reg:
 							if(i-1<0 or j-1<0):
 								raise Exception("Problem in X Y")
 							else:
-								sol3[i,j] = ic3[i,j] + (dt/(self.epsilon(self.x_list[i],self.y_list[j])*dx))*( ((ic2[i+1,j]  -ic2[i-1,j]))/dx   - ((ic1[i,j+1] -ic1[i,j-1])/dy)      ) + s3(self.x_list[i],self.y_list[j],self.time_mesh[t])
+								sol3[i,j] = ic3[i,j] + (dt/(self.epsilon(self.x_list[i],self.y_list[j],self.time_mesh[t])*dx))*( ((ic2[i+1,j]  -ic2[i-1,j]))/dx   - ((ic1[i,j+1] -ic1[i,j-1])/dy)      ) + s3(self.x_list[i],self.y_list[j],self.time_mesh[t])
 						
 
 						except:
@@ -127,7 +130,7 @@ class maxwell_reg:
 								raise Exception("Problem in X Y")
 						else:
 
-							sol3[i,j] = ez_n[i,j] + (dt/(self.epsilon(self.x_list[i],self.y_list[j])*dx))*( ((hy_n[i+1,j]  -hy_n[i-1,j]))/dx   - ((hx_n[i,j+1] -hx_n[i,j-1])/dy)      ) + s3(self.x_list[i],self.y_list[j],self.time_mesh[t])
+							sol3[i,j] = ez_n[i,j] + (dt/(self.epsilon(self.x_list[i],self.y_list[j],self.time_mesh[t])*dx))*( ((hy_n[i+1,j]  -hy_n[i-1,j]))/dx   - ((hx_n[i,j+1] -hx_n[i,j-1])/dy)      ) + s3(self.x_list[i],self.y_list[j],self.time_mesh[t])
 						
 
 
@@ -160,20 +163,20 @@ class maxwell_reg:
 					sol2[i,j] = bottom[1](self.x_list[i],t)
 					sol3[i,j] = bottom[2](self.x_list[i],t)
 				#top BC
-				if(j==self.ysize-1 amd i>=0)
+				if(j==self.ysize-1 and i>=0):
 					sol1[i,j] = top[0](self.x_list[i],t)
 					sol2[i,j] = top[1](self.x_list[i],t)
 					sol3[i,j] = top[2](self.x_list[i],t)
 				#right bc
-				if(i==self.xsize-1 and j>=0)
+				if(i==self.xsize-1 and j>=0):
 					sol1[i,j] = right[0](self.y_list[j],t)
-					sol2[i,j] = right[1]
-					sol3[i,j] = right[2]
+					sol2[i,j] = right[1](self.y_list[j],t)
+					sol3[i,j] = right[2](self.y_list[j],t)
 
 		return (sol1,sol2,sol3)
 
 
-	def yee_method_TE():
+	def yee_method_TE(self):
 		ex=[]
 		ey=[]
 		hz=[]
@@ -190,9 +193,10 @@ class maxwell_reg:
 
 		#half time step for first two, full time step for others 
 		for t in range(1,len(self.time_mesh)):
-		(sol1,sol2,sol3) = self.enforce_boundary_conditons(self.time_mesh[t])
-			for i in range(0,self.xsize)
-				for j in range(0,ysize):
+			print "time:" + str(self.time_mesh[t])
+			(sol1,sol2,sol3) = self.enforce_boundary_conditons(self.time_mesh[t])
+			for i in range(0,self.xsize):
+				for j in range(0,self.ysize):
 					#first time step
 					if t==1:
 						try:
@@ -202,7 +206,7 @@ class maxwell_reg:
 								raise Exception("Out Of Grid y ")
 							
 							else:
-								sol1[i+1,j] = ic1[i+1,j] + (dt/(self.epsilon(self.x_list[i+1],self.y_list[j])*dy))*(ic3[i+1,j+1] - ic3[i+1,j-1]) + s1(self.x_list[i],self.y_list[j])
+								sol1[i+1,j] = ic1[i+1,j] + (dt/(self.epsilon(self.x_list[i+1],self.y_list[j],self.time_mesh[t])*dy))*(ic3[i+1,j+1] - ic3[i+1,j-1]) + s1(self.x_list[i],self.y_list[j])
 							
 						except:
 							pass
@@ -211,7 +215,7 @@ class maxwell_reg:
 							if(i-1<0):
 								raise Exception(" Out OF grid X")
 							else:
-								sol2[i,j+1] = ic2[i,j+1] - (dt/(self.epsilon(self.x_list[i],self.y_list[j+1])*dx))*(ic3[i+1,j+1] - ic3[i-1,j+1]) + s2(self.x_list[i],self.y_list[j])
+								sol2[i,j+1] = ic2[i,j+1] - (dt/(self.epsilon(self.x_list[i],self.y_list[j+1],self.time_mesh[t])*dx))*(ic3[i+1,j+1] - ic3[i-1,j+1]) + s2(self.x_list[i],self.y_list[j])
 							
 
 
@@ -229,7 +233,7 @@ class maxwell_reg:
 								raise Exception("Out Of Grid y ")
 								
 							else:
-								sol1[i+1,j] = ex_n[i+1,j] +(dt/(self.epsilon(self.x_list[i+1],self.y_list[j])*dy))*(hz_n[i+1,j+1] - hz_n[i+1,j-1]) +  s1(self.x_list[i],self.y_list[j])
+								sol1[i+1,j] = ex_n[i+1,j] +(dt/(self.epsilon(self.x_list[i+1],self.y_list[j],self.time_mesh[t])*dy))*(hz_n[i+1,j+1] - hz_n[i+1,j-1]) +  s1(self.x_list[i],self.y_list[j])
 						
 						except:
 							pass	
@@ -238,21 +242,21 @@ class maxwell_reg:
 							if(i-1 < 0):
 								raise Exception("Out Of Grid x ")
 							else:
-								sol2[i,j+1] = hz_n[i,j+1] - (dt/(self.epsilon(self.x_list[i],self.y_list[j+1])*dx))*(hz_n[i+1,j+1] - hz_n[i-1,j+1]) + s2(self.x_list[i],self.y_list[j])
+								sol2[i,j+1] = hz_n[i,j+1] - (dt/(self.epsilon(self.x_list[i],self.y_list[j+1],self.time_mesh[t])*dx))*(hz_n[i+1,j+1] - hz_n[i-1,j+1]) + s2(self.x_list[i],self.y_list[j])
 
 						except:
 							pass
 						
 
-			for i in range(0,self.xsize)
-				for j in range(0,ysize):
+			for i in range(0,self.xsize):
+				for j in range(0,self.ysize):
 					
 					if t==1:
 						try:
 							
 
 
-							sol3[i+1,j+1] = ic3[i+1,j+1] + (dt/(self.mu(self.x_list[i+1],self.y_list[j+1])*dx))*( ((ic1[i+1,j+2]  -ic1[i+1,j]))/dy   - ((ic2[i+2,j+1] -ic2[i,j+1])/dx)      ) +  s3(self.x_list[i],self.y_list[j])
+							sol3[i+1,j+1] = ic3[i+1,j+1] + (dt/(self.mu(self.x_list[i+1],self.y_list[j+1],self.time_mesh[t])*dx))*( ((ic1[i+1,j+2]  -ic1[i+1,j]))/dy   - ((ic2[i+2,j+1] -ic2[i,j+1])/dx)      ) +  s3(self.x_list[i],self.y_list[j])
 						except:
 							pass
 					else:
@@ -261,7 +265,7 @@ class maxwell_reg:
 						hz_n=hz[-1]
 
 						try:
-							sol3[i+1,j+1] = hz_n[i+1,j+1] + (dt/(self.mu(self.x_list[i+1],self.y_list[j+1])*dx))*( ((ex_n[i+1,j+1]  -ex_n[i+1,j]))/dy  - ((ey_n[i+2,j+1] -ey_n[i,j+1])/dy)      ) + s3(self.x_list[i],self.y_list[j])
+							sol3[i+1,j+1] = hz_n[i+1,j+1] + (dt/(self.mu(self.x_list[i+1],self.y_list[j+1],self.time_mesh[t])*dx))*( ((ex_n[i+1,j+1]  -ex_n[i+1,j]))/dy  - ((ey_n[i+2,j+1] -ey_n[i,j+1])/dy)      ) + s3(self.x_list[i],self.y_list[j])
 						except:
 							pass
 
@@ -272,7 +276,7 @@ class maxwell_reg:
 
 
 
-	def source_tm(self.xi,yj):
+	def source_tm(self,xi,yj):
 
 		return self.source_tm(xi,yj)
 	def source_te(self,xi,yj):
@@ -286,9 +290,19 @@ class maxwell_reg:
 
 
 
+a = lambda x,t: 0
+b = lambda x,y: 0
+bc={}
+bc_list = [a,a,a]
+bc["top"]=bc_list
+bc["left"]=bc_list
+bc["right"]=bc_list
+bc["bottom"]=bc_list
+epsilon = lambda x,y,t : 1
+mu = lambda x,y,t : 1
+ic = [b,b,b ]
+source_te=[lambda x,y,t:0,lambda x,y,t:0,lambda x,y,t:0]
+source_tm =[lambda x,y,t:0,lambda x,y,t:0,lambda x,y,t:0]
 
-
-
-
-
-
+x=maxwell_reg(0.0,1.0,0.0,1.0,100,100,1.0,1000,bc,epsilon,mu,ic,source_tm,source_te)
+x.yee_method_TE()
