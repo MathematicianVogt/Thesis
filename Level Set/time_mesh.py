@@ -5,9 +5,9 @@ class time_mesh:
 		self.dt = self.t_mesh[1]-self.t_mesh[0]
 
 	def time_step(self):
-		return 2.0*self.dt
-	def half_time_step(self):
 		return self.dt
+	def half_time_step(self):
+		return self.dt/2.0
 
 	def get_time_location(self,i):
 		return self.t_mesh[i]

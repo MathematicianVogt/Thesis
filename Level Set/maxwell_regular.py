@@ -5,6 +5,7 @@ import math
 from compare_exact_numerical import compare_exact_numerical_2D
 from time_mesh import time_mesh
 import numpy as np
+from pde import *
 
 
 #assumption is that boundary conditions are direchlet 
@@ -137,6 +138,7 @@ class maxwell_reg:
 			hx.append(sol1)
 			hy.append(sol2)
 			ez.append(sol3)
+		return (hx,hy,ez)
 
 	def enforce_boundary_conditons(self, t):
 		bc=self.BC
@@ -275,12 +277,22 @@ class maxwell_reg:
 			hz.append(sol3)
 
 
-
+		return (ex,ey,hz)
 	def source_tm(self,xi,yj):
 
 		return self.source_tm(xi,yj)
 	def source_te(self,xi,yj):
 		return self.source_te(xi,yj)
+
+
+	def plotsol_te(self,sol):
+
+		sol1=sol[0]
+		sol2=sol[1]
+		sol3=sol[2]
+		makeMovieMax(self.x_list,self.y_list,sol1,self.time_mesh,"Ex","x","y")
+		makeMovieMax(self.x_list,self.y_list,sol2,self.time_mesh,"Ey","x","y")
+		makeMovieMax(self.x_list,self.y_list,sol3,self.time_mesh,"Ez","x","y")
 
 
 
@@ -304,5 +316,8 @@ ic = [b,b,b ]
 source_te=[lambda x,y,t:0,lambda x,y,t:0,lambda x,y,t:0]
 source_tm =[lambda x,y,t:0,lambda x,y,t:0,lambda x,y,t:0]
 
-x=maxwell_reg(0.0,1.0,0.0,1.0,100,100,1.0,1000,bc,epsilon,mu,ic,source_tm,source_te)
-x.yee_method_TE()
+x=maxwell_reg(0.0,1.0,0.0,1.0,100,100,1.0,10,bc,epsilon,mu,ic,source_tm,source_te)
+sol =x.yee_method_TE()
+
+
+#x.plotsol_te(sol)
