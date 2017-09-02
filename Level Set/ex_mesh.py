@@ -34,6 +34,8 @@ class ex:
 
 	
 
+	def get_interface(self):
+		return (self.xx,self.yy,self.interface_grid)
 	def plot_interface(self):
 		plt.pcolor(self.xx, self.yy, self.interface_grid,cmap='cool')
 		plt.show()
