@@ -5,6 +5,7 @@ from hx_mesh import *
 from hy_mesh import *
 from hz_mesh import *
 import pylab as plt
+import numpy as np
 
 a=0
 b=1
@@ -24,7 +25,11 @@ IC = lambda x,y: 0
 xo = .5
 yo=.5
 r=.25
-phi = lambda x,y : (x-xo)**2 + (y-yo)**2. - r**2
+#phi = lambda x,y : (x-xo)**2 + (y-yo)**2. - r**2
+
+
+phi = lambda x,y : y-.5
+#phi = lambda x,y : y-.5
 
 
 p1 = ex(a,b,c,d,nx,ny,Tmax,nt,BC,IC,phi)
@@ -50,6 +55,18 @@ c5=p5.get_interface();
 c6=p6.get_interface();
 
 
+print np.count_nonzero(c1[2])
+print np.count_nonzero(c2[2])
+print np.count_nonzero(c3[2])
+print np.count_nonzero(c4[2])
+print np.count_nonzero(c5[2])
+print np.count_nonzero(c6[2])
+
+
+
+# plt.pcolor(c1[0],c1[1],c1[2],cmap='cool')
+# plt.show()
+
 plt.figure(1)
 plt.subplot(231)
 plt.pcolor(c1[0], c1[1], c1[2],cmap='cool')
@@ -62,11 +79,11 @@ plt.pcolor(c3[0], c3[1], c3[2],cmap='cool')
 plt.title("E3")
 plt.subplot(234)
 plt.pcolor(c4[0], c4[1], c4[2],cmap='cool')
-plt.title("B1")
+plt.title("H1")
 plt.subplot(235)
 plt.pcolor(c5[0], c5[1], c5[2],cmap='cool')
-plt.title("B2")
+plt.title("H2")
 plt.subplot(236)
 plt.pcolor(c6[0], c6[1], c6[2],cmap='cool')
-plt.title("B3")
+plt.title("H3")
 plt.show()
