@@ -28,7 +28,7 @@ r=.25
 #phi = lambda x,y : (x-xo)**2 + (y-yo)**2. - r**2
 
 
-phi = lambda x,y : y-.5
+phi = lambda x,y : x-.5
 #phi = lambda x,y : y-.5
 
 
@@ -42,6 +42,8 @@ p6 = hz(a,b,c,d,nx,ny,Tmax,nt,BC,IC,phi)
 
 # p1.plot_interface()
 # p2.plot_interface()
+# c2=p2.get_interface()
+# print c2[2]
 # p3.plot_interface()
 # p4.plot_interface()
 # p5.plot_interface()
@@ -55,17 +57,17 @@ c5=p5.get_interface();
 c6=p6.get_interface();
 
 
-print np.count_nonzero(c1[2])
-print np.count_nonzero(c2[2])
-print np.count_nonzero(c3[2])
-print np.count_nonzero(c4[2])
-print np.count_nonzero(c5[2])
-print np.count_nonzero(c6[2])
+# print np.count_nonzero(c1[2])
+# print np.count_nonzero(c2[2])
+# print np.count_nonzero(c3[2])
+# print np.count_nonzero(c4[2])
+# print np.count_nonzero(c5[2])
+# print np.count_nonzero(c6[2])
 
 
 
-# plt.pcolor(c1[0],c1[1],c1[2],cmap='cool')
-# plt.show()
+# # plt.pcolor(c1[0],c1[1],c1[2],cmap='cool')
+# # plt.show()
 
 plt.figure(1)
 plt.subplot(231)

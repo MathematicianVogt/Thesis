@@ -120,7 +120,7 @@ class phi_hy:
 	def set_irregular_regular_points(self):
 		mesh=self.mesh
 		a = mesh.size()
-		print a
+		#print a
 		xsize = a[1]
 		ysize=a[2]
 		mesh_numbering = np.zeros((xsize,ysize))
@@ -155,7 +155,7 @@ class phi_hy:
 		phi_min = self.phi_min(i,j)
 		phi_max = self.phi_max(i,j)
 
-
+		
 		# if j==0:
 		# 	print (phi_min,phi_max,i,j)
 		# 	print self.mesh.return_point_on_mesh(i,j)
@@ -168,12 +168,12 @@ class phi_hy:
 		p1=self.mesh.return_point_on_mesh(i+1,j)
 		p2=self.mesh.return_point_on_mesh(i+2,j)
 		p3=self.mesh.return_point_on_mesh(i,j)
-		
-
+	
 
 		p1=self.evaluate_min(p1[0],p1[1])
 		p2 = self.evaluate_min(p2[0],p2[1])
 		p3=self.evaluate_min(p3[0],p3[1])
+
 
 		return min(p1,p2,p3)
 
