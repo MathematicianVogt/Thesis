@@ -13,7 +13,7 @@ class ez:
 	#dy - spatial step in y
 	#nx - number steps in x direction
 	#nx - number steps in y direction
-	def __init__(self,a,b,c,d,nx,ny,Tmax,nt,BCs,IC,phi):
+	def __init__(self,a,b,c,d,nx,ny,Tmax,nt,BCs,IC,phi,epsilon,mu):
 		#stencil update i+.5,j+.5
 		#time n+.5
 
@@ -21,16 +21,22 @@ class ez:
 		self.y = np.linspace(c,d,ny)
 		self.x_list=self.x
 		self.y_list=self.y
+		self.grid_x = np.linspace(a,b,nx)
+		self.grid_y=np.linspace(c,d,ny)
 		self.xsize = len(self.x)
 		self.ysize=len(self.y)
 		self.xx,self.yy = np.meshgrid(self.x, self.y, indexing = 'ij')
 		self.mesh = (self.xx,self.yy)
 		self.time_mesh = time_mesh(Tmax,nt)
-		self.hz_sol=[]
+		self.dt = self.time_mesh.time_step()
+		self.ez_sol=[]
 		self.IC=IC
 		self.add_ic()
 		self.phi = phi_ez(phi,self)
 		self.interface_grid = self.phi.set_irregular_regular_points()
+		self.epsilon=epsilon
+		self.mu=mu
+		self.BC=BCs
 
 	def get_interface(self):
 		return (self.xx,self.yy,self.interface_grid)
@@ -46,7 +52,7 @@ class ez:
 		for i in range(0,len(self.x)):
 			for j in range(0,len(self.y)):	
 				IC_cond[i,j] = self.IC(self.x_list[i],self.y_list[j])
-		self.hz_sol.append(IC_cond)
+		self.ez_sol.append(IC_cond)
 
 	def enforce_boundary_conditons(self, t):
 		#bc dictionary
@@ -63,18 +69,18 @@ class ez:
 
 				#left_bc
 				if(i==0 and j>=0):
-					sol1[i,j] = left(self.y_list[j],t)
+					new_sol_boundary_conditions_enforced[i,j] = left(self.y_list[j],t)
 					
 				#bottom BC
 				if(j==0 and i>=0):
-					sol1[i,j] = bottom(self.x_list[i],t)
+					new_sol_boundary_conditions_enforced[i,j] = bottom(self.x_list[i],t)
 
 				#top BC
 				if(j==self.ysize-1 and i>=0):
-					sol1[i,j] = top(self.x_list[i],t)
+					new_sol_boundary_conditions_enforced[i,j] = top(self.x_list[i],t)
 				#right bc
 				if(i==self.xsize-1 and j>=0):
-					sol1[i,j] = right(self.y_list[j],t)
+					new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[j],t)
 
 		return new_sol_boundary_conditions_enforced
 
@@ -113,14 +119,27 @@ class ez:
 		return np.shape(self.mesh)
 	#spatial steps
 	def h(self):
-		dx = 2.0*(self.x[1]-self.x[0])
-		dy=2.0*(self.y[1]-self.y[0])
+		dx = (self.x[1]-self.x[0])
+		dy=(self.y[1]-self.y[0])
 		return (dx,dy)
 	# def half_h(self):
 	# 	dx = (self.x[1]-self.x[0])
 	# 	dy=(self.y[1]-self.y[0])
 	# 	return (dx,dy)
+	def previous_sol(self):
+		return self.ez_sol[-1]
 
+	def build_sol_regular(self,t,hx,hy):
+		(dx,dy) = self.h()
+		mu=self.mu
+		epsilon=self.epsilon
+		dt =self.dt
+		previous_ez = self.ez_sol[-1]
+		ez = self.enforce_boundary_conditons(t)
+		for i in range(1,len(self.x_list)-1):
+			for j in range(1,len(self.y_list)-1):
+				ez[i,j] = previous_ez[i,j] + (dt/(epsilon(self.x_list[i],self.y_list[j])))*((hy[i,j] - hy[i-1,j])/dx  - (hx[i,j] - hx[i,j-1])/dy )
+		self.ez_sol.append(ez)
 class phi_ez:
 	def __init__(self,phi,mesh):
 		self.phi=phi

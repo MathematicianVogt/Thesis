@@ -12,7 +12,7 @@ class time_mesh:
 	def get_time_location(self,i):
 		return self.t_mesh[i]
 	def size(self):
-		return length(self.t_mesh)
+		return len(self.t_mesh)
 	def mesh(self):
 		return self.t_mesh
 		

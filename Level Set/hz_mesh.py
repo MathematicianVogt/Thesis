@@ -13,12 +13,21 @@ class hz:
 	#dy - spatial step in y
 	#nx - number steps in x direction
 	#nx - number steps in y direction
-	def __init__(self,a,b,c,d,nx,ny,Tmax,nt,BCs,IC,phi):
+	def __init__(self,a,b,c,d,nx,ny,Tmax,nt,BCs,IC,phi,epsilon,mu):
 		#stencil update i+.5,j+.5
 		#time n+.5
 
-		self.x = np.linspace(a,b,nx*2)
-		self.y = np.linspace(c,d,ny*2)
+		self.x = np.linspace(a,b,nx)
+		dxt= (self.x[1]-self.x[0])/2.0
+		for i in range(0,len(self.x)):
+			self.x[i]+=dxt
+		self.x=self.x[:-1]
+		self.y = np.linspace(c,d,ny)
+		dyt= (self.y[1]-self.y[0])/2.0
+		for i in range(0,len(self.y)):
+			self.y[i]+=dyt
+		self.grid_x = np.linspace(a,b,nx)
+		self.grid_y=np.linspace(c,d,ny)
 		self.x_list=self.x
 		self.y_list=self.y
 		self.xsize = len(self.x)
@@ -26,11 +35,15 @@ class hz:
 		self.xx,self.yy = np.meshgrid(self.x, self.y, indexing = 'ij')
 		self.mesh = (self.xx,self.yy)
 		self.time_mesh = time_mesh(Tmax,2*nt)
+		self.dt = 2.0*(self.time_mesh.time_step())
 		self.hz_sol=[]
 		self.IC=IC
 		self.add_ic()
 		self.phi = phi_hz(phi,self)
 		self.interface_grid = self.phi.set_irregular_regular_points()
+		self.epsilon=epsilon
+		self.mu=mu
+		self.BC=BCs
 
 	
 	def get_interface(self):
@@ -65,18 +78,18 @@ class hz:
 
 				#left_bc
 				if(i==0 and j>=0):
-					sol1[i,j] = left(self.y_list[j],t)
+					new_sol_boundary_conditions_enforced[i,j] = left(self.y_list[j],t)
 					
 				#bottom BC
 				if(j==0 and i>=0):
-					sol1[i,j] = bottom(self.x_list[i],t)
+					new_sol_boundary_conditions_enforced[i,j] = bottom(self.x_list[i],t)
 
 				#top BC
 				if(j==self.ysize-1 and i>=0):
-					sol1[i,j] = top(self.x_list[i],t)
+					new_sol_boundary_conditions_enforced[i,j] = top(self.x_list[i],t)
 				#right bc
 				if(i==self.xsize-1 and j>=0):
-					sol1[i,j] = right(self.y_list[j],t)
+					new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[j],t)
 
 		return new_sol_boundary_conditions_enforced
 
@@ -112,6 +125,20 @@ class hz:
 	# 	dx = (self.x[1]-self.x[0])
 	# 	dy=(self.y[1]-self.y[0])
 	# 	return (dx,dy)
+	def build_sol_regular(self,t,ex,ey):
+		(dx,dy) = self.h()
+		mu=self.mu
+		epsilon=self.epsilon
+		dt =self.dt
+		previous_hz = self.hz_sol[-1]
+		hz = self.enforce_boundary_conditons(t)
+		for i in range(0,len(self.x)-1):
+			for j in range(0,len(self.y)-1):
+				hz[i,j] = previous_hz[i,j] + (dt/mu(self.x_list[i],self.y_list[j]))*((ex[i,j+1] -ex[i,j])/dy - (ey[i+1,j]  - ey[i,j])/dx )
+		self.hz_sol.append(hz)
+
+	def previous_sol(self):
+		return self.hz_sol[-1]
 
 class phi_hz:
 	def __init__(self,phi,mesh):
@@ -192,6 +219,7 @@ class phi_hz:
 		p3=self.evaluate_max(p3[0],p3[1])
 		p4 = self.evaluate_max(p4[0],p4[1])
 		return max(p1,p2,p3,p4)
+	
 
 
 
