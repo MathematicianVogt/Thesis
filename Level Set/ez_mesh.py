@@ -4,6 +4,7 @@ from compare_exact_numerical import compare_exact_numerical_2D
 from time_mesh import time_mesh
 import numpy as np
 from pde import *
+import time
 
 
 class ez:
@@ -38,6 +39,7 @@ class ez:
 		self.mu=mu
 		self.BC=BCs
 
+
 	def get_interface(self):
 		return (self.xx,self.yy,self.interface_grid)
 	def plot_interface(self):
@@ -53,6 +55,8 @@ class ez:
 			for j in range(0,len(self.y)):	
 				IC_cond[i,j] = self.IC(self.x_list[i],self.y_list[j])
 		self.ez_sol.append(IC_cond)
+		# print np.shape(IC_cond)
+		# time.sleep(2)
 
 	def enforce_boundary_conditons(self, t):
 		#bc dictionary
@@ -61,12 +65,14 @@ class ez:
 		left = bc["left"]
 		right=bc["right"]
 		bottom=bc["bottom"]
-
+		# print (self.xsize,self.ysize)
 		new_sol_boundary_conditions_enforced=np.zeros((self.xsize,self.ysize))
+
 
 		for i in range(0,self.xsize):
 			for j in range(0,self.ysize):
-
+				# print self.xsize
+				# print self.ysize
 				#left_bc
 				if(i==0 and j>=0):
 					new_sol_boundary_conditions_enforced[i,j] = left(self.y_list[j],t)
@@ -81,7 +87,8 @@ class ez:
 				#right bc
 				if(i==self.xsize-1 and j>=0):
 					new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[j],t)
-
+		#print np.shape(new_sol_boundary_conditions_enforced)
+	
 		return new_sol_boundary_conditions_enforced
 
 	def x_list(self):

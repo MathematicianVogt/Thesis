@@ -56,6 +56,7 @@ class hy:
 		for i in range(0,len(self.x)):
 			for j in range(0,len(self.y)):	
 				IC_cond[i,j] = self.IC(self.x_list[i],self.y_list[j])
+		
 		self.hy_sol.append(IC_cond)
 
 	def enforce_boundary_conditons(self, t):
@@ -67,13 +68,14 @@ class hy:
 		bottom=bc["bottom"]
 
 		new_sol_boundary_conditions_enforced=np.zeros((self.xsize,self.ysize))
-
+		# print self.xsize
+		# print self.ysize
 		for i in range(0,self.xsize):
 			for j in range(0,self.ysize):
 
-				#left_bc
-				if(i==0 and j>=0):
-					new_sol_boundary_conditions_enforced[i,j] = left(self.y_list[j],t)
+				# #left_bc
+				# if(i==0 and j>=0):
+				# 	new_sol_boundary_conditions_enforced[i,j] = left(self.y_list[j],t)
 					
 				#bottom BC
 				if(j==0 and i>=0):
@@ -82,9 +84,9 @@ class hy:
 				#top BC
 				if(j==self.ysize-1 and i>=0):
 					new_sol_boundary_conditions_enforced[i,j] = top(self.x_list[i],t)
-				#right bc
-				if(i==self.xsize-1 and j>=0):
-					new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[j],t)
+				# #right bc
+				# if(i==self.xsize-1 and j>=0):
+				# 	new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[j],t)
 
 		return new_sol_boundary_conditions_enforced
 
@@ -127,10 +129,20 @@ class hy:
 		dt =self.dt
 		previous_hy = self.hy_sol[-1]
 		hy = self.enforce_boundary_conditons(t)
-		print len(self.x_list)
+		
 		for i in range(0,len(self.x_list)-1):
 			for j in range(1,len(self.y_list)-1):
+				# print "----"
+				# print len(self.x_list)
+				# print len(self.y_list)
+				# print np.shape(ez)
+				# print ez
+				# print "----"
+				# print "fuck"
+				# print np.shape(ez)
+				# time.sleep(ez)
 				hy[i,j] = previous_hy[i,j] + (dt/(mu(self.x_list[i],self.y_list[j])*dx))*(ez[i+1,j] - ez[i,j])
+
 		self.hy_sol.append(hy)
 
 	def previous_sol(self):

@@ -12,7 +12,7 @@ class solution:
 	def solve_TE(self):
 		ex = self.ex_mesh
 		ey=self.ey_mesh
-		hz = self.ez_mesh
+		hz = self.hz_mesh
 
 		for n in range(1,self.time_mesh.size()):
 			print "Time: " + str(self.time_mesh.get_time_location(n))
@@ -31,7 +31,7 @@ class solution:
 	def solve_TM(self):
 		hx=self.hx_mesh
 		hy=self.hy_mesh
-		ez=self.hz_mesh
+		ez=self.ez_mesh
 		for n in range(1,self.time_mesh.size()):
 			print "Time: " + str(self.time_mesh.get_time_location(n))
 			phx = hx.previous_sol()

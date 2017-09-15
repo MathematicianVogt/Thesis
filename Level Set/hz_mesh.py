@@ -73,23 +73,23 @@ class hz:
 
 		new_sol_boundary_conditions_enforced=np.zeros((self.xsize,self.ysize))
 
-		for i in range(0,self.xsize):
-			for j in range(0,self.ysize):
+		# for i in range(0,self.xsize):
+		# 	for j in range(0,self.ysize):
 
-				#left_bc
-				if(i==0 and j>=0):
-					new_sol_boundary_conditions_enforced[i,j] = left(self.y_list[j],t)
+		# 		#left_bc
+		# 		if(i==0 and j>=0):
+		# 			new_sol_boundary_conditions_enforced[i,j] = left(self.y_list[j],t)
 					
-				#bottom BC
-				if(j==0 and i>=0):
-					new_sol_boundary_conditions_enforced[i,j] = bottom(self.x_list[i],t)
+		# 		#bottom BC
+		# 		if(j==0 and i>=0):
+		# 			new_sol_boundary_conditions_enforced[i,j] = bottom(self.x_list[i],t)
 
-				#top BC
-				if(j==self.ysize-1 and i>=0):
-					new_sol_boundary_conditions_enforced[i,j] = top(self.x_list[i],t)
-				#right bc
-				if(i==self.xsize-1 and j>=0):
-					new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[j],t)
+		# 		#top BC
+		# 		if(j==self.ysize-1 and i>=0):
+		# 			new_sol_boundary_conditions_enforced[i,j] = top(self.x_list[i],t)
+		# 		#right bc
+		# 		if(i==self.xsize-1 and j>=0):
+		# 			new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[j],t)
 
 		return new_sol_boundary_conditions_enforced
 
