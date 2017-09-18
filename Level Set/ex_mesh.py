@@ -46,7 +46,7 @@ class ex:
 	def get_phi(self):
 		return self.phi
 	def get_sol(self):
-		return (self.xx,self.yy,self.hz_sol)
+		return (self.xx,self.yy,self.ex_sol)
 
 	def get_interface(self):
 		return (self.xx,self.yy,self.interface_grid)
@@ -149,7 +149,7 @@ class phi_ex:
 	def set_irregular_regular_points(self):
 		mesh=self.mesh
 		a = mesh.size()
-		print a
+		#print a
 		xsize = a[1]
 		ysize=a[2]
 		mesh_numbering = np.zeros((xsize,ysize))

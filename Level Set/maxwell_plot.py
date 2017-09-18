@@ -8,11 +8,12 @@ class maxwell_plot:
 		self.hx=hx
 		self.hy=hy
 		self.hz=hz
-		t_list = np.linspace(0,Tmax,nt):
-		t_list_shit = [x + (t_list[1]-t_list[0])/2.0 for x in t_list]
-		
+		self.t_list = np.linspace(0,Tmax,nt)
+		self.t_list_shift = [x + (self.t_list[1]-self.t_list[0])/2.0 for x in self.t_list]
+		self.t_list_shift=self.t_list_shift[:-1]
 
-	def plot_contour(self):
+
+	def plot_contour(self,filename):
 		(x1,y1,ex_sol) = self.ex.get_sol()
 		ex_interface_func = self.ex.get_phi()
 
@@ -32,34 +33,53 @@ class maxwell_plot:
 
 		(x5,y5,hz_sol) = self.hz.get_sol()
 		hz_interface_func = self.hz.get_phi()
-		plt.figure()
 		
-		plt.subplot(231)
-		plt.contour(x1,y1,ex_sol,cmap='cool')
-		plt.contour(x1,y1,ex_interface_func(x1,y1))
 
-		plt.subplot(232)
-		plt.contour(x2,y2,ey_sol,cmap='cool')
-		plt.contour(x2,y2,ey_interface_func(x2,y2))
+		FFMpegWriter = manimation.writers['ffmpeg']
+		metadata = dict(title=title, artist='Matplotlib',
+		                comment='Movie support!')
+		writer = FFMpegWriter(fps=1, metadata=metadata)
+		fig=plt.figure()
+		with writer.saving(fig, filename+ ".mp4", 100):
+			for i in range(0,len(self.t_list)):
+				
+				fulltime=self.t_list[i]
+				halftime=self.t_list_shift[i]
+				
+				plt.subplot(231)
+				plt.contour(x1,y1,ex_sol[i],cmap='cool')
+				plt.contour(x1,y1,ex_interface_func(x1,y1),[1])
+				plt.title(r"$E_x(x,y,t) : t=$" + str(fulltime))
 
-		plt.subplot(233)
-		plt.contour(x3,y3,ez_sol,cmap='cool')
-		plt.contour(x3,y3,ez_interface_func(x3,y3))
+				plt.subplot(232)
+				plt.contour(x2,y2,ey_sol[i],cmap='cool')
+				plt.contour(x2,y2,ey_interface_func(x2,y2),[1])
+				plt.title(r"$E_y(x,y,t) : t=$" + str(fulltime))
+
+				plt.subplot(233)
+				plt.contour(x3,y3,ez_sol[i],cmap='cool')
+				plt.contour(x3,y3,ez_interface_func(x3,y3),[1])
+				plt.title(r"$E_z(x,y,t) : t=$" + str(fulltime))
 
 
-		plt.subplot(234)
-		plt.contour(x4,y4,hx_sol,cmap='cool')
-		plt.contour(x4,y4,hx_interface_func(x4,y4))
+				plt.subplot(234)
+				plt.contour(x4,y4,hx_sol[i],cmap='cool')
+				plt.contour(x4,y4,hx_interface_func(x4,y4),[1])
+				plt.title(r"$H_x(x,y,t) : t=$" + str(halftime))
 
 
-		plt.subplot(235)
-		plt.contour(x5,y5,hy_sol,cmap='cool')
-		plt.contour(x5,y5,hy_interface_func(x5,y5))
+				plt.subplot(235)
+				plt.contour(x5,y5,hy_sol[i],cmap='cool')
+				plt.contour(x5,y5,hy_interface_func(x5,y5),[1])
+				plt.title(r"$H_y(x,y,t) : t=$" + str(halftime))
 
 
-		plt.subplot(236)
-		plt.contour(x6,y6,hz_sol,cmap='cool')
-		plt.contour(x6,y6,ex_interface_func(x1,y1))
+				plt.subplot(236)
+				plt.contour(x6,y6,hz_sol[i],cmap='cool')
+				plt.contour(x6,y6,ex_interface_func(x1,y1),[1])
+				plt.title(r"$H_z(x,y,t) : t=$" + str(halftime))
+				writer.grab_frame()
+				plt.clf()
 	
 	def plot_surface(self):
 		pass

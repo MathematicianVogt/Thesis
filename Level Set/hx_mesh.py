@@ -146,7 +146,7 @@ class phi_hx:
 	def set_irregular_regular_points(self):
 		mesh=self.mesh
 		a = mesh.size()
-		print a
+		#print a
 		xsize = a[1]
 		ysize=a[2]
 		mesh_numbering = np.zeros((xsize,ysize))
