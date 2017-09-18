@@ -28,7 +28,7 @@ class ex:
 		self.grid_y=np.linspace(c,d,ny)
 		self.x_list=self.x
 		self.y_list=self.y
-		self.xx,self.yy = np.meshgrid(self.x, self.y, indexing = 'ij')
+		self.xx,self.yy = np.meshgrid(self.x[:-1], self.y, indexing = 'ij')
 		self.xsize = len(self.x)
 		self.ysize=len(self.y)
 		self.mesh = (self.xx,self.yy)
@@ -43,7 +43,10 @@ class ex:
 		self.mu=mu
 		self.BC=BCs
 
-	
+	def get_phi(self):
+		return self.phi
+	def get_sol(self):
+		return (self.xx,self.yy,self.hz_sol)
 
 	def get_interface(self):
 		return (self.xx,self.yy,self.interface_grid)
@@ -191,9 +194,9 @@ class phi_ex:
 	def phi_min(self,i,j):
 		
 
-		p1=self.mesh.return_point_on_mesh(i+1,j)
-		p2=self.mesh.return_point_on_mesh(i+1,j+1)
-		p3=self.mesh.return_point_on_mesh(i+1,j-1)
+		p1=self.mesh.return_point_on_mesh(i,j)
+		p2=self.mesh.return_point_on_mesh(i,j+1)
+		p3=self.mesh.return_point_on_mesh(i,j-1)
 
 
 
@@ -203,9 +206,9 @@ class phi_ex:
 		return min(p1,p2,p3)
 
 	def phi_max(self,i,j):
-		p1=self.mesh.return_point_on_mesh(i+1,j)
-		p2=self.mesh.return_point_on_mesh(i+1,j+1)
-		p3=self.mesh.return_point_on_mesh(i+1,j-1)
+		p1=self.mesh.return_point_on_mesh(i,j)
+		p2=self.mesh.return_point_on_mesh(i,j+1)
+		p3=self.mesh.return_point_on_mesh(i,j-1)
 
 
 

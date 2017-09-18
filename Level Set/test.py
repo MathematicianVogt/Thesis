@@ -43,12 +43,12 @@ p4 = hx(a,b,c,d,nx,ny,Tmax,nt,BC,IC,phi,epsilon,mu)
 p5 = hy(a,b,c,d,nx,ny,Tmax,nt,BC,IC,phi,epsilon,mu)
 p6 = hz(a,b,c,d,nx,ny,Tmax,nt,BC,IC,phi,epsilon,mu)
 
-t1 = time_mesh(Tmax,nt)
-t2 =time_mesh(Tmax,2*nt)
+# t1 = time_mesh(Tmax,nt)
+# t2 =time_mesh(Tmax,2*nt)
 
-a =solution(p1,p2,p3,p4,p5,p6,t1,t2)
-a.solve_TE()
-a.solve_TM()
+# a =solution(p1,p2,p3,p4,p5,p6,t1,t2)
+# a.solve_TE()
+# a.solve_TM()
 
 # p1.plot_interface()
 # p2.plot_interface()
@@ -59,12 +59,12 @@ a.solve_TM()
 # p5.plot_interface()
 # p6.plot_interface()
 
-# c1=p1.get_interface();
-# c2=p2.get_interface();
-# c3=p3.get_interface();
-# c4=p4.get_interface();
-# c5=p5.get_interface();
-# c6=p6.get_interface();
+c1=p1.get_interface();
+c2=p2.get_interface();
+c3=p3.get_interface();
+c4=p4.get_interface();
+c5=p5.get_interface();
+c6=p6.get_interface();
 
 
 # # print np.count_nonzero(c1[2])
@@ -80,23 +80,23 @@ a.solve_TM()
 # # # plt.show()
 
 #plot interfaces
-# plt.figure(1)
-# plt.subplot(231)
-# plt.pcolor(c1[0], c1[1], c1[2],cmap='cool')
-# plt.title("E1")
-# plt.subplot(232)
-# plt.pcolor(c2[0], c2[1], c2[2],cmap='cool')
-# plt.title("E2")
-# plt.subplot(233)
-# plt.pcolor(c3[0], c3[1], c3[2],cmap='cool')
-# plt.title("E3")
-# plt.subplot(234)
-# plt.pcolor(c4[0], c4[1], c4[2],cmap='cool')
-# plt.title("H1")
-# plt.subplot(235)
-# plt.pcolor(c5[0], c5[1], c5[2],cmap='cool')
-# plt.title("H2")
-# plt.subplot(236)
-# plt.pcolor(c6[0], c6[1], c6[2],cmap='cool')
-# plt.title("H3")
-# plt.show()
+plt.figure(1)
+plt.subplot(231)
+plt.pcolor(c1[0], c1[1], c1[2],cmap='cool')
+plt.title("E1")
+plt.subplot(232)
+plt.pcolor(c2[0], c2[1], c2[2],cmap='cool')
+plt.title("E2")
+plt.subplot(233)
+plt.pcolor(c3[0], c3[1], c3[2],cmap='cool')
+plt.title("E3")
+plt.subplot(234)
+plt.pcolor(c4[0], c4[1], c4[2],cmap='cool')
+plt.title("H1")
+plt.subplot(235)
+plt.pcolor(c5[0], c5[1], c5[2],cmap='cool')
+plt.title("H2")
+plt.subplot(236)
+plt.pcolor(c6[0], c6[1], c6[2],cmap='cool')
+plt.title("H3")
+plt.show()

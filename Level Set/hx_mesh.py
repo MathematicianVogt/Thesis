@@ -28,7 +28,7 @@ class hx:
 		self.y_list=self.y
 		self.xsize = len(self.x)
 		self.ysize=len(self.y)
-		self.xx,self.yy = np.meshgrid(self.x, self.y, indexing = 'ij')
+		self.xx,self.yy = np.meshgrid(self.x, self.y[:-1], indexing = 'ij')
 		self.mesh = (self.xx,self.yy)
 		self.time_mesh = time_mesh(Tmax,nt*2)
 		self.dt = 2.0*(self.time_mesh.time_step())
@@ -40,7 +40,10 @@ class hx:
 		self.epsilon=epsilon
 		self.mu=mu
 		self.BC=BCs
-
+	def get_phi(self):
+		return self.phi
+	def get_sol(self):
+		return (self.xx,self.yy,self.hx_sol)
 	def get_interface(self):
 		return (self.xx,self.yy,self.interface_grid)
 	def plot_interface(self):
@@ -188,8 +191,8 @@ class phi_hx:
 	def phi_min(self,i,j):
 		
 
-		p1=self.mesh.return_point_on_mesh(i,j+1)
-		p2=self.mesh.return_point_on_mesh(i,j+2)
+		p1=self.mesh.return_point_on_mesh(i,j)
+		p2=self.mesh.return_point_on_mesh(i,j+1)
 		p3=self.mesh.return_point_on_mesh(i,j)
 		
 
@@ -203,8 +206,8 @@ class phi_hx:
 
 	def phi_max(self,i,j):
 		
-		p1=self.mesh.return_point_on_mesh(i,j+1)
-		p2=self.mesh.return_point_on_mesh(i,j+2)
+		p1=self.mesh.return_point_on_mesh(i,j)
+		p2=self.mesh.return_point_on_mesh(i,j+1)
 		p3=self.mesh.return_point_on_mesh(i,j)
 		
 

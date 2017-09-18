@@ -38,7 +38,10 @@ class ez:
 		self.epsilon=epsilon
 		self.mu=mu
 		self.BC=BCs
-
+	def get_phi(self):
+		return self.phi
+	def get_sol(self):
+		return (self.xx,self.yy,self.ez_sol)
 
 	def get_interface(self):
 		return (self.xx,self.yy,self.interface_grid)

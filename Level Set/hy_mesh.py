@@ -28,7 +28,7 @@ class hy:
 		self.grid_y=np.linspace(c,d,ny)
 		self.xsize = len(self.x)
 		self.ysize=len(self.y)
-		self.xx,self.yy = np.meshgrid(self.x, self.y, indexing = 'ij')
+		self.xx,self.yy = np.meshgrid(self.x[:-1], self.y, indexing = 'ij')
 		self.mesh = (self.xx,self.yy)
 		self.time_mesh = time_mesh(Tmax,nt*2)
 		self.dt = 2.0*(self.time_mesh.time_step())
@@ -41,6 +41,10 @@ class hy:
 		self.mu=mu
 		self.BC=BCs
 
+	def get_phi(self):
+		return self.phi
+	def get_sol(self):
+		return (self.xx,self.yy,self.hy_sol)
 	def get_interface(self):
 		return (self.xx,self.yy,self.interface_grid)
 	
@@ -201,8 +205,8 @@ class phi_hy:
 	def phi_min(self,i,j):
 		
 
-		p1=self.mesh.return_point_on_mesh(i+1,j)
-		p2=self.mesh.return_point_on_mesh(i+2,j)
+		p1=self.mesh.return_point_on_mesh(i,j)
+		p2=self.mesh.return_point_on_mesh(i+1,j)
 		p3=self.mesh.return_point_on_mesh(i,j)
 	
 
@@ -216,8 +220,8 @@ class phi_hy:
 
 	def phi_max(self,i,j):
 		
-		p1=self.mesh.return_point_on_mesh(i+1,j)
-		p2=self.mesh.return_point_on_mesh(i+2,j)
+		p1=self.mesh.return_point_on_mesh(i,j)
+		p2=self.mesh.return_point_on_mesh(i+1,j)
 		p3=self.mesh.return_point_on_mesh(i,j)
 		
 
