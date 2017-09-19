@@ -29,7 +29,7 @@ class ex:
 		self.x_list=self.x
 		self.y_list=self.y
 		self.xx,self.yy = np.meshgrid(self.x[:-1], self.y, indexing = 'ij')
-		self.xsize = len(self.x)
+		self.xsize = len(self.x)-1
 		self.ysize=len(self.y)
 		self.mesh = (self.xx,self.yy)
 		self.time_mesh = time_mesh(Tmax,nt)
@@ -59,8 +59,8 @@ class ex:
 		x1=self.xsize
 		x2=self.ysize
 		IC_cond = np.zeros((x1,x2))
-		for i in range(0,len(self.x)):
-			for j in range(0,len(self.y)):	
+		for i in range(0,self.xsize):
+			for j in range(0,self.ysize):	
 				IC_cond[i,j] = self.IC(self.x_list[i],self.y_list[j])
 		self.ex_sol.append(IC_cond)
 
@@ -133,9 +133,11 @@ class ex:
 		dt =self.dt
 		previous_ex = self.ex_sol[-1]
 		ex = self.enforce_boundary_conditons(t)
+		# print np.shape(ex)
+		# print self.xsize
+		# print self.ysize
 		for i in range(0,len(self.x_list)-1):
 			for j in range(1,len(self.y_list)-1):
-
 				ex[i,j] = previous_ex[i,j] + (dt/(epsilon(self.x_list[i],self.y_list[j])*dy))*(hz[i,j] - hz[i,j-1])
 		self.ex_sol.append(ex)
 

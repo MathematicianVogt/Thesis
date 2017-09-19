@@ -27,7 +27,7 @@ class hx:
 		self.x_list=self.x
 		self.y_list=self.y
 		self.xsize = len(self.x)
-		self.ysize=len(self.y)
+		self.ysize=len(self.y)-1
 		self.xx,self.yy = np.meshgrid(self.x, self.y[:-1], indexing = 'ij')
 		self.mesh = (self.xx,self.yy)
 		self.time_mesh = time_mesh(Tmax,nt*2)
@@ -55,8 +55,8 @@ class hx:
 		x1=self.xsize
 		x2=self.ysize
 		IC_cond = np.zeros((x1,x2))
-		for i in range(0,len(self.x)):
-			for j in range(0,len(self.y)):	
+		for i in range(0,self.xsize):
+			for j in range(0,self.ysize):	
 				IC_cond[i,j] = self.IC(self.x_list[i],self.y_list[j])
 		self.hx_sol.append(IC_cond)
 

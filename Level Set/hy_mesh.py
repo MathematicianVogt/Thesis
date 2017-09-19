@@ -4,6 +4,7 @@ from compare_exact_numerical import compare_exact_numerical_2D
 from time_mesh import time_mesh
 import numpy as np
 from pde import *
+import time
 
 
 class hy:
@@ -26,9 +27,10 @@ class hy:
 		self.y_list=self.y
 		self.grid_x = np.linspace(a,b,nx)
 		self.grid_y=np.linspace(c,d,ny)
-		self.xsize = len(self.x)
+		self.xsize = len(self.x)-1
 		self.ysize=len(self.y)
 		self.xx,self.yy = np.meshgrid(self.x[:-1], self.y, indexing = 'ij')
+		time.sleep(5)
 		self.mesh = (self.xx,self.yy)
 		self.time_mesh = time_mesh(Tmax,nt*2)
 		self.dt = 2.0*(self.time_mesh.time_step())
@@ -57,8 +59,8 @@ class hy:
 		x1=self.xsize
 		x2=self.ysize
 		IC_cond = np.zeros((x1,x2))
-		for i in range(0,len(self.x)):
-			for j in range(0,len(self.y)):	
+		for i in range(0,self.xsize):
+			for j in range(0,self.ysize):	
 				IC_cond[i,j] = self.IC(self.x_list[i],self.y_list[j])
 		
 		self.hy_sol.append(IC_cond)

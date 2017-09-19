@@ -54,8 +54,8 @@ class ez:
 		x1=self.xsize
 		x2=self.ysize
 		IC_cond = np.zeros((x1,x2))
-		for i in range(0,len(self.x)):
-			for j in range(0,len(self.y)):	
+		for i in range(0,self.xsize):
+			for j in range(0,self.ysize):	
 				IC_cond[i,j] = self.IC(self.x_list[i],self.y_list[j])
 		self.ez_sol.append(IC_cond)
 		# print np.shape(IC_cond)
