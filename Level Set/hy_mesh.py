@@ -25,15 +25,13 @@ class hy:
 		self.y = np.linspace(c,d,ny)
 		self.x_list=self.x
 		self.y_list=self.y
-		self.grid_x = np.linspace(a,b,nx)
-		self.grid_y=np.linspace(c,d,ny)
 		self.xsize = len(self.x)-1
 		self.ysize=len(self.y)
 		self.xx,self.yy = np.meshgrid(self.x[:-1], self.y, indexing = 'ij')
 		time.sleep(5)
 		self.mesh = (self.xx,self.yy)
 		self.time_mesh = time_mesh(Tmax,nt*2)
-		self.dt = 2.0*(self.time_mesh.time_step())
+		self.dt = (self.time_mesh.time_step())
 		self.hy_sol=[]
 		self.IC=IC
 		self.add_ic()
@@ -121,7 +119,7 @@ class hy:
 		return np.shape(self.mesh)
 	#spatial steps
 	def h(self):
-		dx = 2.0*(self.x[1]-self.x[0])
+		dx = (self.x[1]-self.x[0])
 		dy=(self.y[1]-self.y[0])
 		return (dx,dy)
 	# def half_h(self):
@@ -233,4 +231,29 @@ class phi_hy:
 		p3=self.evaluate_max(p3[0],p3[1])
 
 		return max(p1,p2,p3)
+	def gradient(self,i,j):
+		x=self.x_list[i]
+		y=self.y_list[j]
+		(dx,dy) = self.mesh.h()
+		phi_x = (self.phi(x+dx,y) + self.phi(x,y))/(2.0*dx)
+		phi_y = (self.phi(x,y+dy) + self.phi(x,y))/(2.0*dy)
+
+		return (phi_x,phi_y)
+	def projection_and_get_angle(self,x1,y1,alpha):
+		grad=self.gradient(x1,y1)
+		x_star = (x1 + alpha*grad[0], y1 + alpha*grad[1])
+		normal_at_interface = self.gradient(x_star[0],x_star[1])
+		theta = math.acos((normal_at_interface[0])/math.sqrt(normal_at_interface[0]**2 + normal_at_interface[0]**2))
+		return (theta,x_star)
+	def theta_matrix(self,irregular_grid_point_matrix):
+
+		theta_matrix = np.zeros(self.xsize,self.ysize)
+		for i in range(0 self.xsize):
+			for j in range(0,self.ysize):
+				if (irregular_grid_point_matrix[i,j]==1):
+					(theta,x_star) = self.projection_and_get_angle(self.x_list[i],self.y_list[j])
+					theta_matrix[i,j] = theta
+				else:
+					pass
+		return theta_matrix
 		
