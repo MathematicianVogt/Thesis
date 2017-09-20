@@ -130,7 +130,7 @@ class hx:
 		
 		for i in range(1,len(self.x_list)-1):
 			for j in range(0,len(self.y_list)-1):
-				hx[i,j] = previous_hx[i,j] + (dt/(mu(self.x_list[i],self.y_list[j])*dy))*(ez[i,j+1] - ez[i,j])
+				hx[i,j] = previous_hx[i,j] - (dt/(mu(self.x_list[i],self.y_list[j])*dy))*(ez[i,j+1] - ez[i,j])
 		self.hx_sol.append(hx)
 
 	def previous_sol(self):

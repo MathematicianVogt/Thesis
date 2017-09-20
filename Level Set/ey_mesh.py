@@ -129,7 +129,7 @@ class ey:
 		ey = self.enforce_boundary_conditons(t)
 		for i in range(1,len(self.x_list)-1):
 			for j in range(0,len(self.y_list)-1):
-				ey[i,j] = previous_ey[i,j] + (dt/(epsilon(self.x_list[i],self.y_list[j])*dy))*(hz[i,j] - hz[i-1,j])
+				ey[i,j] = previous_ey[i,j] - (dt/(epsilon(self.x_list[i],self.y_list[j])*dx))*(hz[i,j] - hz[i-1,j])
 		self.ey_sol.append(ey)
 	def previous_sol(self):
 		return self.ey_sol[-1]
