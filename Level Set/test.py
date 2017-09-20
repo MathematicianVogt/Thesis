@@ -17,14 +17,14 @@ d=1
 nx=100
 ny=100
 Tmax=1
-nt=100
+nt=10000
 BC = {}
 basic_bc = lambda x,y:0.0
 BC["top"] = basic_bc
 BC["bottom"] = basic_bc 
 BC["left"] = basic_bc
 BC["right"] = basic_bc
-IC = lambda x,y: x**2+y**2 
+IC = lambda x,y: x**2 + y**2
 xo = .5
 yo=.5
 r=.25
@@ -50,9 +50,8 @@ t2 =time_mesh(Tmax,2*nt)
 a =solution(p1,p2,p3,p4,p5,p6,t1,t2)
 a.solve_TE()
 a.solve_TM()
-#maxwellplot=maxwell_plot(p1,p2,p3,p4,p5,p6,Tmax,nt)
-
-#maxwellplot.plot_contour("movielol")
+maxwellplot=maxwell_plot(p1,p2,p3,p4,p5,p6,Tmax,nt)
+maxwellplot.plot_contour("movielol")
 
 # p1.plot_interface()
 # p2.plot_interface()

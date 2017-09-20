@@ -248,7 +248,7 @@ class phi_ez:
 	def theta_matrix(self,irregular_grid_point_matrix):
 
 		theta_matrix = np.zeros(self.xsize,self.ysize)
-		for i in range(0 self.xsize):
+		for i in range(0,self.xsize):
 			for j in range(0,self.ysize):
 				if (irregular_grid_point_matrix[i,j]==1):
 					(theta,x_star) = self.projection_and_get_angle(self.x_list[i],self.y_list[j])

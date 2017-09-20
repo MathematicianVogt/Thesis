@@ -307,7 +307,7 @@ class maxwell_plot:
 					writer.grab_frame()
 					plt.clf()
 
-	def plot_contour_TM(self,filename):
+	def plot_surface_TM(self,filename):
 		print "Starting to Plot Surface Plot TM Solutions....."
 		(x3,y3,ez_sol) = self.ez.get_sol()
 		ez_interface_func = self.ez.get_phi()
