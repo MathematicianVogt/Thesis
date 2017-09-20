@@ -231,6 +231,7 @@ class phi_ex:
 		normal_at_interface = self.gradient(x_star[0],x_star[1])
 		theta = math.acos((normal_at_interface[0])/math.sqrt(normal_at_interface[0]**2 + normal_at_interface[0]**2))
 		return (theta,x_star)
+
 	def theta_matrix(self,irregular_grid_point_matrix):
 
 		theta_matrix = np.zeros(self.xsize,self.ysize)
@@ -242,7 +243,23 @@ class phi_ex:
 				else:
 					pass
 		return theta_matrix
+	def curv(self,i,j):
+		grad = self.gradient(i,j)
+		(dx,dy) = self.mesh.h()
+		phi_x=grad[0]
+		phi_y=grad[1]
+		phi_xx = (self.phi(self.x_list[i] - dx,self.y_list[j]) - 2.0*self.phi(self.x_list[i],self.y_list[j]) + self.phi(self.x_list[i] + dx,self.y_list[j]))/dx**2
+		phi_yy = (self.phi(self.x_list[i],self.y_list[j]-dy) - 2.0*self.phi(self.x_list[i],self.y_list[j]) + self.phi(self.x_list[i] ,self.y_list[j] + dy))/dy**2
+		phi_xy = (self.phi(self.x_list[i] + dx,self.y_list[j] +dy) -self.phi(self.x_list[i] + dx,self.y_list[j] -dy) -self.phi(self.x_list[i] - dx,self.y_list[j] +dy)  + self.phi(self.x_list[i] - dx,self.y_list[j] -dy)  )/(4.0*dx*dy)
 
+		k = (phi_xx*phi_y**2 -2.0*phi_x*phi_y*phi_xy + phi_yy*phi_x**2)/(1e-15 +math.pow(phi_x**2 + phi_y**2),1.5)
+		return k
+	def normal(self,i,j):
+		grad = self.gradient(i,j)
+		phi_x = grad[0]
+		phi_y=grad[1]
+		norm = math.sqrt(1e-15 + phi_x**2 + phi_y**2)
+		return (phi_x/norm,phi_y/norm)
 
 
 
