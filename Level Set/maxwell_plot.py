@@ -20,6 +20,7 @@ class maxwell_plot:
 
 
 	def plot_contour(self,filename):
+		default_cmap='hot'
 		print "Starting to Plot Contour Plot All....."
 		(x1,y1,ex_sol) = self.ex.get_sol()
 		ex_interface_func = self.ex.get_phi()
@@ -54,34 +55,34 @@ class maxwell_plot:
 				halftime=self.t_list_shift[i]
 				
 				plt.subplot(231)
-				plt.pcolor(x1,y1,ex_sol[i],cmap='cool')
+				plt.pcolor(x1,y1,ex_sol[i],cmap=default_cmap)
 				plt.colorbar()
 
 				#plt.contour(x1,y1,ex_interface_func(x1,y1),[1])
 				plt.title(r"$E_x(x,y,t) : t=$" + str(fulltime))
 
 				plt.subplot(232)
-				plt.pcolor(x2,y2,ey_sol[i],cmap='cool')
+				plt.pcolor(x2,y2,ey_sol[i],cmap=default_cmap)
 				plt.colorbar()
 				#plt.contour(x2,y2,ey_interface_func(x2,y2),[1])
 				plt.title(r"$E_y(x,y,t) : t=$" + str(fulltime))
 
 				plt.subplot(233)
-				plt.pcolor(x3,y3,ez_sol[i],cmap='cool')
+				plt.pcolor(x3,y3,ez_sol[i],cmap=default_cmap)
 				plt.colorbar()
 				#plt.contour(x3,y3,ez_interface_func(x3,y3),[1])
 				plt.title(r"$E_z(x,y,t) : t=$" + str(fulltime))
 
 
 				plt.subplot(234)
-				plt.pcolor(x4,y4,hx_sol[i],cmap='cool')
+				plt.pcolor(x4,y4,hx_sol[i],cmap=default_cmap)
 				plt.colorbar()
 				#plt.contour(x4,y4,hx_interface_func(x4,y4),[1])
 				plt.title(r"$H_x(x,y,t) : t=$" + str(halftime))
 
 
 				plt.subplot(235)
-				plt.pcolor(x5,y5,hy_sol[i],cmap='cool')
+				plt.pcolor(x5,y5,hy_sol[i],cmap=default_cmap)
 				plt.colorbar()
 
 				#plt.contour(x5,y5,hy_interface_func(x5,y5),[1])
@@ -89,7 +90,7 @@ class maxwell_plot:
 
 
 				plt.subplot(236)
-				plt.pcolor(x6,y6,hz_sol[i],cmap='cool')
+				plt.pcolor(x6,y6,hz_sol[i],cmap=default_cmap)
 				plt.colorbar()
 				#plt.contour(x6,y6,ex_interface_func(x1,y1),[1])
 				plt.title(r"$H_z(x,y,t) : t=$" + str(halftime))
@@ -97,6 +98,7 @@ class maxwell_plot:
 				plt.clf()
 	
 	def plot_contour_TE(self,filename):
+		default_cmap='hot'
 		print "Starting to Plot Contour Plot TE Solutions....."
 		(x1,y1,ex_sol) = self.ex.get_sol()
 		ex_interface_func = self.ex.get_phi()
@@ -120,19 +122,19 @@ class maxwell_plot:
 				halftime=self.t_list_shift[i]
 				
 				plt.subplot(131)
-				plt.pcolor(x5,y5,hz_sol[i],cmap='cool')
+				plt.pcolor(x5,y5,hz_sol[i],cmap=default_cmap)
 				#plt.contour(x5,y5,hz_interface_func(x5,y5),[1])
 				plt.colorbar()
 				plt.title(r"$H_z(x,y,t) : t=$" + str(halftime))
 
 				plt.subplot(132)
-				plt.pcolor(x1,y1,ex_sol[i],cmap='cool')
+				plt.pcolor(x1,y1,ex_sol[i],cmap=default_cmap)
 				#plt.contour(x1,y1,ey_interface_func(x1,y1),[1])
 				plt.colorbar()
 				plt.title(r"$E_x(x,y,t) : t=$" + str(fulltime))
 
 				plt.subplot(133)
-				plt.pcolor(x3,y3,ey_sol[i],cmap='cool')
+				plt.pcolor(x3,y3,ey_sol[i],cmap=default_cmap)
 				plt.colorbar()
 				#plt.contour(x3,y3,ey_interface_func(x3,y3),[1])
 				plt.title(r"$E_y(x,y,t) : t=$" + str(fulltime))
@@ -141,6 +143,7 @@ class maxwell_plot:
 				plt.clf()
 
 	def plot_contour_TM(self,filename):
+		default_cmap='hot'
 		print "Starting to Plot Contour Plot TE Solutions....."
 		(x3,y3,ez_sol) = self.ez.get_sol()
 		ez_interface_func = self.ez.get_phi()
@@ -166,19 +169,19 @@ class maxwell_plot:
 				halftime=self.t_list_shift[i]
 				
 				plt.subplot(231)
-				plt.pcolor(x4,y4,hx_sol[i],cmap='cool')
+				plt.pcolor(x4,y4,hx_sol[i],cmap=default_cmap)
 				#plt.contour(x1,y1,ex_interface_func(x1,y1),[1])
 				plt.title(r"$H_x(x,y,t) : t=$" + str(fulltime))
 				plt.colorbar()
 
 				plt.subplot(232)
-				plt.pcolor(x5,y5,hy_sol[i],cmap='cool')
+				plt.pcolor(x5,y5,hy_sol[i],cmap=default_cmap)
 				#plt.contour(x2,y2,ey_interface_func(x2,y2),[1])
 				plt.title(r"$H_y(x,y,t) : t=$" + str(fulltime))
 				plt.colorbar()
 
 				plt.subplot(233)
-				plt.pcolor(x3,y3,ez_sol[i],cmap='cool')
+				plt.pcolor(x3,y3,ez_sol[i],cmap=default_cmap)
 				#plt.contour(x3,y3,ez_interface_func(x3,y3),[1])
 				plt.title(r"$E_z(x,y,t) : t=$" + str(fulltime))
 				plt.colorbar()
@@ -189,6 +192,7 @@ class maxwell_plot:
 
 
 	def plot_surface(self):
+		default_cmap='hot'
 		print "Starting to Plot All Surfaces....."
 		(x1,y1,ex_sol) = self.ex.get_sol()
 		ex_interface_func = self.ex.get_phi()
@@ -223,34 +227,34 @@ class maxwell_plot:
 				halftime=self.t_list_shift[i]
 				
 				plt.subplot(231)
-				plt.plot_surface(x1,y1,ex_sol[i],cmap='cool')
+				plt.plot_surface(x1,y1,ex_sol[i],cmap=default_cmap)
 				
 
 				#plt.contour(x1,y1,ex_interface_func(x1,y1),[1])
 				plt.title(r"$E_x(x,y,t) : t=$" + str(fulltime))
 
 				plt.subplot(232)
-				plt.plot_surface(x2,y2,ey_sol[i],cmap='cool')
+				plt.plot_surface(x2,y2,ey_sol[i],cmap=default_cmap)
 				
 				#plt.contour(x2,y2,ey_interface_func(x2,y2),[1])
 				plt.title(r"$E_y(x,y,t) : t=$" + str(fulltime))
 
 				plt.subplot(233)
-				plt.plot_surface(x3,y3,ez_sol[i],cmap='cool')
+				plt.plot_surface(x3,y3,ez_sol[i],cmap=default_cmap)
 				
 				#plt.contour(x3,y3,ez_interface_func(x3,y3),[1])
 				plt.title(r"$E_z(x,y,t) : t=$" + str(fulltime))
 
 
 				plt.subplot(234)
-				plt.plot_surface(x4,y4,hx_sol[i],cmap='cool')
+				plt.plot_surface(x4,y4,hx_sol[i],cmap=default_cmap)
 				
 				#plt.contour(x4,y4,hx_interface_func(x4,y4),[1])
 				plt.title(r"$H_x(x,y,t) : t=$" + str(halftime))
 
 
 				plt.subplot(235)
-				plt.plot_surface(x5,y5,hy_sol[i],cmap='cool')
+				plt.plot_surface(x5,y5,hy_sol[i],cmap=default_cmap)
 				
 
 				#plt.contour(x5,y5,hy_interface_func(x5,y5),[1])
@@ -258,7 +262,7 @@ class maxwell_plot:
 
 
 				plt.subplot(236)
-				plt.plot_surface(x6,y6,hz_sol[i],cmap='cool')
+				plt.plot_surface(x6,y6,hz_sol[i],cmap=default_cmap)
 				
 				#plt.contour(x6,y6,ex_interface_func(x1,y1),[1])
 				plt.title(r"$H_z(x,y,t) : t=$" + str(halftime))
@@ -267,6 +271,7 @@ class maxwell_plot:
 
 
 	def plot_surface_TE(self,filename):
+			default_cmap='hot'
 			print "Starting to Plot Surface Plot TE Solutions....."
 			(x1,y1,ex_sol) = self.ex.get_sol()
 			ex_interface_func = self.ex.get_phi()
@@ -290,17 +295,17 @@ class maxwell_plot:
 					halftime=self.t_list_shift[i]
 					
 					plt.subplot(131)
-					plt.plot_surface(x5,y5,hz_sol[i],cmap='cool')
+					plt.plot_surface(x5,y5,hz_sol[i],cmap=default_cmap)
 					#plt.contour(x5,y5,hz_interface_func(x5,y5),[1])
 					plt.title(r"$H_z(x,y,t) : t=$" + str(halftime))
 
 					plt.subplot(132)
-					plt.plot_surface(x1,y1,ex_sol[i],cmap='cool')
+					plt.plot_surface(x1,y1,ex_sol[i],cmap=default_cmap)
 					#plt.contour(x1,y1,ey_interface_func(x1,y1),[1])
 					plt.title(r"$E_x(x,y,t) : t=$" + str(fulltime))
 
 					plt.subplot(133)
-					plt.plot_surface(x3,y3,ey_sol[i],cmap='cool')
+					plt.plot_surface(x3,y3,ey_sol[i],cmap=default_cmap)
 					#plt.contour(x3,y3,ey_interface_func(x3,y3),[1])
 					plt.title(r"$E_y(x,y,t) : t=$" + str(fulltime))
 
@@ -308,6 +313,7 @@ class maxwell_plot:
 					plt.clf()
 
 	def plot_surface_TM(self,filename):
+		default_cmap='hot'
 		print "Starting to Plot Surface Plot TM Solutions....."
 		(x3,y3,ez_sol) = self.ez.get_sol()
 		ez_interface_func = self.ez.get_phi()
@@ -333,17 +339,17 @@ class maxwell_plot:
 				halftime=self.t_list_shift[i]
 				
 				plt.subplot(231)
-				plt.plot_surface(x4,y4,hx_sol[i],cmap='cool')
+				plt.plot_surface(x4,y4,hx_sol[i],cmap=default_cmap)
 				#plt.contour(x1,y1,ex_interface_func(x1,y1),[1])
 				plt.title(r"$H_x(x,y,t) : t=$" + str(fulltime))
 
 				plt.subplot(232)
-				plt.plot_surface(x5,y5,hy_sol[i],cmap='cool')
+				plt.plot_surface(x5,y5,hy_sol[i],cmap=default_cmap)
 				#plt.contour(x2,y2,ey_interface_func(x2,y2),[1])
 				plt.title(r"$H_y(x,y,t) : t=$" + str(fulltime))
 
 				plt.subplot(233)
-				plt.plot_surface(x3,y3,ez_sol[i],cmap='cool')
+				plt.plot_surface(x3,y3,ez_sol[i],cmap=default_cmap)
 				#plt.contour(x3,y3,ez_interface_func(x3,y3),[1])
 				plt.title(r"$E_z(x,y,t) : t=$" + str(fulltime))
 
