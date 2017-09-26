@@ -1,14 +1,7 @@
-from ex_mesh import *
-from ey_mesh import *
-from ez_mesh import *
-from hx_mesh import *
-from hy_mesh import *
-from hz_mesh import *
 import pylab as plt
 import numpy as np
-from solution_normal import *
-from time_mesh import *
-from maxwell_plot import *
+from elliptic import *
+
 
 a=0
 b=1
@@ -16,42 +9,54 @@ c=0
 d=1
 nx=100
 ny=100
-Tmax=1
-nt=10000
+
+
 BC = {}
-basic_bc = lambda x,y:1.0
+basic_bc = lambda x:1.0
 BC["top"] = basic_bc
 BC["bottom"] = basic_bc 
 BC["left"] = basic_bc
 BC["right"] = basic_bc
-IC = lambda x,y: x**2 + y**2
+
 xo = .5
 yo=.5
 r=.25
-epsilon = lambda x,y : 1.0
-mu = lambda x,y : 1.0
+bplus=1.0
+bminus=-1.0
+
+
 #phi = lambda x,y : (x-xo)**2 + (y-yo)**2. - r**2
 
+phi = lambda x,y : 1.0
+def f(x,y):
+	return 1.0
 
-phi = lambda x,y : x-.5
+def v(x,y):
+	return 1.0
+def w(x,y):
+	return 1.0
+
+def sigma(x,y):
+	return 1.0
+
+def beta(x,y):
+	bplus=1.0
+	bminus=-1.0
+	if(x**2 + y**2 <= .25):
+		return bminus
+	else:
+		return bplus
+
+
+
+
+#phi = lambda x,y : x-.5
 #phi = lambda x,y : y-.5
 
 
-p1 = ex(a,b,c,d,nx,ny,Tmax,nt,BC,IC,phi,epsilon,mu)
-p2 = ey(a,b,c,d,nx,ny,Tmax,nt,BC,IC,phi,epsilon,mu)
-p3 = ez(a,b,c,d,nx,ny,Tmax,nt,BC,IC,phi,epsilon,mu)
-p4 = hx(a,b,c,d,nx,ny,Tmax,nt,BC,IC,phi,epsilon,mu)
-p5 = hy(a,b,c,d,nx,ny,Tmax,nt,BC,IC,phi,epsilon,mu)
-p6 = hz(a,b,c,d,nx,ny,Tmax,nt,BC,IC,phi,epsilon,mu)
-
-t1 = time_mesh(Tmax,nt)
-t2 =time_mesh(Tmax,2*nt)
-
-a =solution(p1,p2,p3,p4,p5,p6,t1,t2)
-a.solve_TE()
-a.solve_TM()
-maxwellplot=maxwell_plot(p1,p2,p3,p4,p5,p6,Tmax,nt)
-maxwellplot.plot_contour("movielol")
+p1 = elliptic(a,b,c,d,nx,ny,BC,phi,beta,sigma,f,v,w)
+p1.build_sol_regular()
+p1.plot_interface()
 
 # p1.plot_interface()
 # p2.plot_interface()
