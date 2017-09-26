@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import math
 import numpy as np
 from pde import *
+import time
 
 
 class elliptic:
@@ -123,25 +124,50 @@ class elliptic:
 		sol_with_boundary=self.enforce_boundary_conditons()
 		A = np.zeros(((len(self.x_list)-1)**2,(len(self.y_list)-1)**2))
 		b = np.zeros(((len(self.x_list)-1)**2,1))
-
-		for i in range(0,len(self.x_list)-1):
-			for j in range(0,len(self.y_list)-1):
+		print A
+		for i in range(1,len(self.x_list)-1):
+			for j in range(1,len(self.y_list)-1):
 				if (interface_grid[i,j]==1):
 					self.irregular(A,b,i,j,dx,sol_with_boundary)
 				else:
 					self.regular(A,b,i,j,dx,sol_with_boundary)
+		print A
 		sol = np.linalg.solve(A, b)
+		#print np.size(sol)
+
+
+		major_sol = np.zeros((len(self.x_list)-2,len(self.y_list)-2))
+		counter1=0
+		counter2=0
+
+		for i in range(0,(len(self.x_list)-1)**2):
+			
+			if counter2==len(self.x_list)-1:
+				counter2=1
+				counter1+=1	
+			
+			major_sol[:,:] = 2.0
+			counter2+=1
+
+		major_sol= np.flipud(major_sol)
+		print major_sol
+		print np.shape(major_sol)
+		print np.shape(sol_with_boundary)
+		sol_with_boundary[1:len(self.x_list)-1,1:len(self.y_list)-1] = major_sol
+		print sol_with_boundary
+
 	def regular(self,A,b,i,j,h,bound):
-		k1 = self.k_transform(i,j,len(self.x_list))
-		k2 = self.k_transform(i-1,j,len(self.x_list)) 
-		k3 = self.k_transform(i+1,j,len(self.x_list)) 
-		k4 = self.k_transform(i,j+1,len(self.x_list)) 
-		k5 = self.k_transform(i,j-1,len(self.x_list)) 
+		k1 = self.k_transform(i,j,len(self.x_list))-1
+		print k1
+		k2 = self.k_transform(i-1,j,len(self.x_list))-1
+		k3 = self.k_transform(i+1,j,len(self.x_list)) -1
+		k4 = self.k_transform(i,j+1,len(self.x_list)) -1
+		k5 = self.k_transform(i,j-1,len(self.x_list)) -1
 		
 		xi=self.x_list[i]
 		yj=self.y_list[j]
 
-		if(i==0 and j==0):
+		if(i==1 and j==1):
 
 			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi,yj+h/2.0)) + self.sigma(xi,yj)
 			A[k1,k2] =0.0
@@ -151,7 +177,7 @@ class elliptic:
 
 			b[k1,0] =self.f(xi,yj) - (1.0/h**2)*self.beta(xi-h/2.0 ,yj)*bound[i-1,j] - (1.0/h**2)*self.beta(xi ,yj- h/2.0)*bound[i,j-1]
 			
-		elif(i == len(self.x_list)-2 and j==0):
+		elif(i == len(self.x_list) and j==1):
 			A[k1,k1] = (1.0/h**2)*(-self.beta(xi - h/2.0,yj)-self.beta(xi,yj+h/2.0)) + self.sigma(xi,yj)
 			A[k1,k2] =(1.0/h**2)*self.beta(xi - h/2.0,yj)
 			A[k1,k3] =0.0
@@ -160,7 +186,7 @@ class elliptic:
 
 			b[k1,0] =self.f(xi,yj) - (1.0/h**2)*self.beta(xi +h/2.0 ,yj)*bound[i+1,j] - (1.0/h**2)*self.beta(xi  ,yj - h/2.0)*bound[i,j-1]
 
-		elif (i==0 and j==len(self.y_list)-2):
+		elif (i==1 and j==len(self.y_list)-2):
 			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi,yj-h/2.0) ) + self.sigma(xi,yj)
 			A[k1,k2] =0.0
 			A[k1,k3] =(1.0/h**2)*self.beta(xi + h/2.0,yj)
@@ -176,7 +202,7 @@ class elliptic:
 			A[k1,k4] = 0.0
 			A[k1,k5] =(1.0/h**2)*self.beta(xi ,yj- h/2.0)
 			b[k1,0] =self.f(xi,yj) - (1.0/h**2)*self.beta(xi +h/2.0  ,yj)*bound[i+1,j] - (1.0/h**2)*self.beta(xi  ,yj+h/2.0)*bound[i,j+1]
-		elif (i==0):
+		elif (i==1):
 			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi,yj+h/2.0)-self.beta(xi,yj-h/2.0) ) + self.sigma(xi,yj)
 			A[k1,k2] =0.0
 			A[k1,k3] =(1.0/h**2)*self.beta(xi + h/2.0,yj)
@@ -184,7 +210,7 @@ class elliptic:
 			A[k1,k5] =(1.0/h**2)*self.beta(xi ,yj- h/2.0)
 
 			b[k1,0] =self.f(xi,yj)  - (1.0/h**2)*self.beta(xi -h/2.0  ,yj)*bound[i-1,j]
-		elif (j==0):
+		elif (j==1):
 			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi - h/2.0,yj)-self.beta(xi,yj+h/2.0) ) + self.sigma(xi,yj)
 			A[k1,k2] =(1.0/h**2)*self.beta(xi - h/2.0,yj)
 			A[k1,k3] =(1.0/h**2)*self.beta(xi + h/2.0,yj)
@@ -233,7 +259,7 @@ class elliptic:
 		pass
 
 
-	def k_transform(self,i,j,real_length_x):
+	def k_transform(self,j,i,real_length_x):
 		return i+ (real_length_x-1)*(j-1)
 
 

@@ -29,7 +29,7 @@ bminus=-1.0
 
 phi = lambda x,y : 1.0
 def f(x,y):
-	return 1.0
+	return 0.0
 
 def v(x,y):
 	return 1.0
@@ -37,7 +37,7 @@ def w(x,y):
 	return 1.0
 
 def sigma(x,y):
-	return 1.0
+	return 0.0
 
 def beta(x,y):
 	bplus=1.0
@@ -56,7 +56,7 @@ def beta(x,y):
 
 p1 = elliptic(a,b,c,d,nx,ny,BC,phi,beta,sigma,f,v,w)
 p1.build_sol_regular()
-p1.plot_interface()
+#p1.plot_interface()
 
 # p1.plot_interface()
 # p2.plot_interface()
