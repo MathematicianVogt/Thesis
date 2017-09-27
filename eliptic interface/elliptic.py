@@ -125,16 +125,16 @@ class elliptic:
 		beta = self.beta
 		interface_grid=self.interface_grid
 		sol_with_boundary=self.enforce_boundary_conditons()
-		flip = np.flipud(sol_with_boundary)
+		#flip = np.flipud(sol_with_boundary)
 		A = np.zeros(((len(self.x_list)-2)**2,(len(self.y_list)-2)**2))
 		b = np.zeros(((len(self.x_list)-2)**2,1))
 		#print A
 		for j in range(1,len(self.y_list)-1):
 			for i in range(1,len(self.x_list)-1):
 				if (interface_grid[i,j]==1):
-					self.irregular(A,b,i,j,dx,flip)
+					self.irregular(A,b,i,j,dx,sol_with_boundary)
 				else:
-					self.regular(A,b,i,j,dx,flip)
+					self.regular(A,b,i,j,dx,sol_with_boundary)
 		print A
 		sol = np.linalg.solve(A, b)
 
@@ -152,20 +152,27 @@ class elliptic:
 			major_sol[counter1,counter2] = sol[i,0]
 			counter2+=1
 
-		major_sol= np.flipud(major_sol)
+		#major_sol= np.flipud(major_sol)
+		print sol
 		print major_sol
-		print np.shape(major_sol)
-		print np.shape(sol_with_boundary)
+		# print major_sol
+		# print np.shape(major_sol)
+		# print np.shape(sol_with_boundary)
+		
 		sol_with_boundary[1:len(self.x_list)-1,1:len(self.y_list)-1] = major_sol
 		print sol_with_boundary
-		fig = plt.figure()
-		ax = fig.gca(projection='3d')
-		surf = ax.plot_wireframe(self.xx,self.yy,sol_with_boundary)
+		# print sol_with_boundary
+		# fig = plt.figure()
+		# ax = fig.gca(projection='3d')
+		# surf = ax.plot_wireframe(self.xx,self.yy,sol_with_boundary)
+		# plt.show()
+		plt.pcolor(self.xx,self.yy,sol_with_boundary,cmap='hot')
+		plt.colorbar()
 		plt.show()
 
 	def regular(self,A,b,i,j,h,bound):
 		k1 = self.k_transform(i,j,len(self.x_list))
-		print k1
+		#print k1
 		#print k1
 		#print (i,j)
 		k2 = self.k_transform(i-1,j,len(self.x_list))
@@ -206,10 +213,10 @@ class elliptic:
 			A[k1,k5] =(1.0/h**2)*self.beta(xi ,yj- h/2.0)
 			b[k1,0] =self.f(xi,yj) - (1.0/h**2)*self.beta(xi +h/2.0  ,yj)*bound[i+1,j] - (1.0/h**2)*self.beta(xi  ,yj+h/2.0)*bound[i,j+1]
 		elif (i==1):
-			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi,yj+h/2.0)-self.beta(xi,yj-h/2.0) )- self.sigma(xi,yj)
+			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi,yj+h/2.0)-self.beta(xi,yj-h/2.0) -self.beta(xi-h/2.0,yj)  )- self.sigma(xi,yj)
 			A[k1,k3] =(1.0/h**2)*self.beta(xi + h/2.0,yj)
 			A[k1,k4] = (1.0/h**2)*self.beta(xi ,yj+ h/2.0)
-			A[k1,k2] =(1.0/h**2)*self.beta(xi-h/2.0 ,yj)
+			A[k1,k5] =(1.0/h**2)*self.beta(xi ,yj-h/2.0)
 
 			b[k1,0] =self.f(xi,yj)  - (1.0/h**2)*self.beta(xi -h/2.0  ,yj)*bound[i-1,j]
 		elif (j==1):

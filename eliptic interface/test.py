@@ -1,6 +1,7 @@
 import pylab as plt
 import numpy as np
 from elliptic import *
+import math
 
 
 a=0
@@ -12,10 +13,10 @@ ny=100
 
 
 BC = {}
-bc1 = lambda x: 2*x+2
-bc2 = lambda x:2*x
-bc3 = lambda x:2*x
-bc4 = lambda x:2*x +2
+bc1 = lambda x: x**2 +1
+bc2 = lambda x:x**2
+bc3 = lambda x:x**2
+bc4 = lambda x:x**2+1
 BC["top"] = bc1
 BC["bottom"] = bc2
 BC["left"] = bc3
@@ -31,7 +32,7 @@ bminus=-51.0
 
 phi = lambda x,y : 1.0
 def f(x,y):
-	return 2*x+2*y
+	return 500*math.sin(x*y)
 
 def v(x,y):
 	return 1.0
