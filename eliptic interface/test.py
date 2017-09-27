@@ -12,24 +12,26 @@ ny=100
 
 
 BC = {}
-basic_bc = lambda x:1.0
-BC["top"] = basic_bc
-BC["bottom"] = basic_bc 
-BC["left"] = basic_bc
-BC["right"] = basic_bc
+bc1 = lambda x: 2*x+2
+bc2 = lambda x:2*x
+bc3 = lambda x:2*x
+bc4 = lambda x:2*x +2
+BC["top"] = bc1
+BC["bottom"] = bc2
+BC["left"] = bc3
+BC["right"] = bc4
 
 xo = .5
 yo=.5
 r=.25
-bplus=1.0
-bminus=-1.0
-
+bplus=110.0
+bminus=-51.0
 
 #phi = lambda x,y : (x-xo)**2 + (y-yo)**2. - r**2
 
 phi = lambda x,y : 1.0
 def f(x,y):
-	return 0.0
+	return 2*x+2*y
 
 def v(x,y):
 	return 1.0
@@ -37,15 +39,16 @@ def w(x,y):
 	return 1.0
 
 def sigma(x,y):
-	return 0.0
+	return 0
 
 def beta(x,y):
-	bplus=1.0
-	bminus=-1.0
-	if(x**2 + y**2 <= .25):
-		return bminus
-	else:
-		return bplus
+	bplus=10.0
+	bminus=-5
+	# if(x**2 + y**2 <= .25):
+	# 	return bminus
+	# else:
+	# 	return bplus
+	return 1.0
 
 
 

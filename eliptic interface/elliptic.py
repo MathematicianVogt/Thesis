@@ -3,6 +3,9 @@ import math
 import numpy as np
 from pde import *
 import time
+from mpl_toolkits.mplot3d import Axes3D
+import pylab as plt
+
 
 
 class elliptic:
@@ -122,31 +125,31 @@ class elliptic:
 		beta = self.beta
 		interface_grid=self.interface_grid
 		sol_with_boundary=self.enforce_boundary_conditons()
-		A = np.zeros(((len(self.x_list)-1)**2,(len(self.y_list)-1)**2))
-		b = np.zeros(((len(self.x_list)-1)**2,1))
-		print A
-		for i in range(1,len(self.x_list)-1):
-			for j in range(1,len(self.y_list)-1):
+		flip = np.flipud(sol_with_boundary)
+		A = np.zeros(((len(self.x_list)-2)**2,(len(self.y_list)-2)**2))
+		b = np.zeros(((len(self.x_list)-2)**2,1))
+		#print A
+		for j in range(1,len(self.y_list)-1):
+			for i in range(1,len(self.x_list)-1):
 				if (interface_grid[i,j]==1):
-					self.irregular(A,b,i,j,dx,sol_with_boundary)
+					self.irregular(A,b,i,j,dx,flip)
 				else:
-					self.regular(A,b,i,j,dx,sol_with_boundary)
+					self.regular(A,b,i,j,dx,flip)
 		print A
 		sol = np.linalg.solve(A, b)
-		#print np.size(sol)
 
 
 		major_sol = np.zeros((len(self.x_list)-2,len(self.y_list)-2))
 		counter1=0
 		counter2=0
 
-		for i in range(0,(len(self.x_list)-1)**2):
+		for i in range(0,np.shape(sol)[0]):
 			
-			if counter2==len(self.x_list)-1:
-				counter2=1
+			if counter2==len(self.x_list)-2:
+				counter2=0
 				counter1+=1	
 			
-			major_sol[:,:] = 2.0
+			major_sol[counter1,counter2] = sol[i,0]
 			counter2+=1
 
 		major_sol= np.flipud(major_sol)
@@ -155,84 +158,80 @@ class elliptic:
 		print np.shape(sol_with_boundary)
 		sol_with_boundary[1:len(self.x_list)-1,1:len(self.y_list)-1] = major_sol
 		print sol_with_boundary
+		fig = plt.figure()
+		ax = fig.gca(projection='3d')
+		surf = ax.plot_wireframe(self.xx,self.yy,sol_with_boundary)
+		plt.show()
 
 	def regular(self,A,b,i,j,h,bound):
-		k1 = self.k_transform(i,j,len(self.x_list))-1
+		k1 = self.k_transform(i,j,len(self.x_list))
 		print k1
-		k2 = self.k_transform(i-1,j,len(self.x_list))-1
-		k3 = self.k_transform(i+1,j,len(self.x_list)) -1
-		k4 = self.k_transform(i,j+1,len(self.x_list)) -1
-		k5 = self.k_transform(i,j-1,len(self.x_list)) -1
+		#print k1
+		#print (i,j)
+		k2 = self.k_transform(i-1,j,len(self.x_list))
+		k3 = self.k_transform(i+1,j,len(self.x_list)) 
+		k4 = self.k_transform(i,j+1,len(self.x_list)) 
+		k5 = self.k_transform(i,j-1,len(self.x_list)) 
 		
 		xi=self.x_list[i]
 		yj=self.y_list[j]
-
 		if(i==1 and j==1):
 
-			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi,yj+h/2.0)) + self.sigma(xi,yj)
-			A[k1,k2] =0.0
+			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi,yj+h/2.0) -self.beta(xi,yj-h/2.0)-self.beta(xi-h/2.0,yj)) - self.sigma(xi,yj)
+			#print (-self.beta(xi + h/2.0,yj)-self.beta(xi,yj+h/2.0))
+			
+			#print (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi,yj+h/2.0))
 			A[k1,k3] =(1.0/h**2)*self.beta(xi + h/2.0,yj)
 			A[k1,k4] = (1.0/h**2)*self.beta(xi ,yj+ h/2.0)
-			A[k1,k5] =0.0
-
+			#print ()
 			b[k1,0] =self.f(xi,yj) - (1.0/h**2)*self.beta(xi-h/2.0 ,yj)*bound[i-1,j] - (1.0/h**2)*self.beta(xi ,yj- h/2.0)*bound[i,j-1]
 			
-		elif(i == len(self.x_list) and j==1):
-			A[k1,k1] = (1.0/h**2)*(-self.beta(xi - h/2.0,yj)-self.beta(xi,yj+h/2.0)) + self.sigma(xi,yj)
+		elif(i == len(self.x_list)-2 and j==1):
+			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi,yj+h/2.0) -self.beta(xi,yj-h/2.0)-self.beta(xi-h/2.0,yj)) -self.sigma(xi,yj)
 			A[k1,k2] =(1.0/h**2)*self.beta(xi - h/2.0,yj)
-			A[k1,k3] =0.0
 			A[k1,k4] = (1.0/h**2)*self.beta(xi ,yj+ h/2.0)
-			A[k1,k5] =0.0
 
 			b[k1,0] =self.f(xi,yj) - (1.0/h**2)*self.beta(xi +h/2.0 ,yj)*bound[i+1,j] - (1.0/h**2)*self.beta(xi  ,yj - h/2.0)*bound[i,j-1]
 
 		elif (i==1 and j==len(self.y_list)-2):
-			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi,yj-h/2.0) ) + self.sigma(xi,yj)
-			A[k1,k2] =0.0
+			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi,yj+h/2.0) -self.beta(xi,yj-h/2.0)-self.beta(xi-h/2.0,yj)) - self.sigma(xi,yj)
 			A[k1,k3] =(1.0/h**2)*self.beta(xi + h/2.0,yj)
-			A[k1,k4] = 0.0
 			A[k1,k5] =(1.0/h**2)*self.beta(xi ,yj- h/2.0)
 
 			b[k1,0] =self.f(xi,yj) - (1.0/h**2)*self.beta(xi -h/2.0  ,yj)*bound[i-1,j] - (1.0/h**2)*self.beta(xi  ,yj +h/2.0)*bound[i,j+1]
 
-		elif(i==len(self.x_list)-2, j==len(self.y_list-2)):
-			A[k1,k1] = (1.0/h**2)*(self.beta(xi - h/2.0,yj)-self.beta(xi,yj-h/2.0) ) + self.sigma(xi,yj)
-			A[k1,k2] =(1.0/h**2)*self.beta(xi - h/2.0,yj)
-			A[k1,k3] =0.0
-			A[k1,k4] = 0.0
+		elif(i==len(self.x_list)-2 and j==len(self.y_list)-2):
+			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi,yj+h/2.0) -self.beta(xi,yj-h/2.0)-self.beta(xi-h/2.0,yj) ) - self.sigma(xi,yj)
+			A[k1,k2] =(1.0/h**2)*self.beta(xi - h/2,yj)
 			A[k1,k5] =(1.0/h**2)*self.beta(xi ,yj- h/2.0)
 			b[k1,0] =self.f(xi,yj) - (1.0/h**2)*self.beta(xi +h/2.0  ,yj)*bound[i+1,j] - (1.0/h**2)*self.beta(xi  ,yj+h/2.0)*bound[i,j+1]
 		elif (i==1):
-			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi,yj+h/2.0)-self.beta(xi,yj-h/2.0) ) + self.sigma(xi,yj)
-			A[k1,k2] =0.0
+			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi,yj+h/2.0)-self.beta(xi,yj-h/2.0) )- self.sigma(xi,yj)
 			A[k1,k3] =(1.0/h**2)*self.beta(xi + h/2.0,yj)
 			A[k1,k4] = (1.0/h**2)*self.beta(xi ,yj+ h/2.0)
-			A[k1,k5] =(1.0/h**2)*self.beta(xi ,yj- h/2.0)
+			A[k1,k2] =(1.0/h**2)*self.beta(xi-h/2.0 ,yj)
 
 			b[k1,0] =self.f(xi,yj)  - (1.0/h**2)*self.beta(xi -h/2.0  ,yj)*bound[i-1,j]
 		elif (j==1):
-			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi - h/2.0,yj)-self.beta(xi,yj+h/2.0) ) + self.sigma(xi,yj)
-			A[k1,k2] =(1.0/h**2)*self.beta(xi - h/2.0,yj)
+			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi,yj+h/2.0) -self.beta(xi,yj-h/2.0)-self.beta(xi-h/2.0,yj)) - self.sigma(xi,yj)
+			A[k1,k4] =(1.0/h**2)*self.beta(xi ,yj+h/2.0)
 			A[k1,k3] =(1.0/h**2)*self.beta(xi + h/2.0,yj)
-			A[k1,k4] = (1.0/h**2)*self.beta(xi ,yj+ h/2.0)
-			A[k1,k5] =0.0
+			A[k1,k2] = (1.0/h**2)*self.beta(xi-h/2.0 ,yj)
 			b[k1,0] =self.f(xi,yj)  - (1.0/h**2)*self.beta(xi  ,yj-h/2.0)*bound[i,j-1]
 		elif(i==len(self.x_list)-2):
-			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi - h/2.0,yj)-self.beta(xi,yj-h/2.0) ) + self.sigma(xi,yj)
+			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi,yj+h/2.0) -self.beta(xi,yj-h/2.0)-self.beta(xi-h/2.0,yj)) - self.sigma(xi,yj)
 			A[k1,k2] =(1.0/h**2)*self.beta(xi - h/2.0,yj)
-			A[k1,k3] =0.0
 			A[k1,k4] = (1.0/h**2)*self.beta(xi ,yj+ h/2.0)
 			A[k1,k5] =(1.0/h**2)*self.beta(xi ,yj- h/2.0)
 			b[k1,0] =self.f(xi,yj)  - (1.0/h**2)*self.beta(xi +h/2.0  ,yj)*bound[i+1,j]
 		elif(j==len(self.y_list)-2):
-			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi - h/2.0,yj)-self.beta(xi,yj+h/2.0)-self.beta(xi,yj-h/2.0) ) + self.sigma(xi,yj)
+			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi,yj+h/2.0) -self.beta(xi,yj-h/2.0)-self.beta(xi-h/2.0,yj)) -self.sigma(xi,yj)
 			A[k1,k2] =(1.0/h**2)*self.beta(xi - h/2.0,yj)
 			A[k1,k3] =(1.0/h**2)*self.beta(xi + h/2.0,yj)
-			A[k1,k4] = (1.0/h**2)*self.beta(xi ,yj+ h/2.0)
 			A[k1,k5] =(1.0/h**2)*self.beta(xi ,yj- h/2.0)
 			b[k1,0] =self.f(xi,yj)  - (1.0/h**2)*self.beta(xi  ,yj+h/2.0)*bound[i,j+1]
 		else:
-			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi - h/2.0,yj)-self.beta(xi,yj+h/2.0)-self.beta(xi,yj-h/2.0) ) + self.sigma(xi,yj)
+			A[k1,k1] = (1.0/h**2)*(-self.beta(xi + h/2.0,yj)-self.beta(xi - h/2.0,yj)-self.beta(xi,yj+h/2.0)-self.beta(xi,yj-h/2.0) ) -self.sigma(xi,yj)
 			A[k1,k2] =(1.0/h**2)*self.beta(xi - h/2.0,yj)
 			A[k1,k3] =(1.0/h**2)*self.beta(xi + h/2.0,yj)
 			A[k1,k4] = (1.0/h**2)*self.beta(xi ,yj+ h/2.0)
@@ -259,8 +258,8 @@ class elliptic:
 		pass
 
 
-	def k_transform(self,j,i,real_length_x):
-		return i+ (real_length_x-1)*(j-1)
+	def k_transform(self,i,j,real_length_x):
+		return i-1 +(real_length_x-2)*(j-1)
 
 
 	def previous_sol(self):
