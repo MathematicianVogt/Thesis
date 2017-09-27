@@ -16,10 +16,15 @@ c=0
 d=1
 nx=100
 ny=100
+<<<<<<< Updated upstream
 Tmax=1
 nt=2
+=======
+Tmax=10
+nt=100000
+>>>>>>> Stashed changes
 BC = {}
-basic_bc = lambda x,y:1.0
+basic_bc = lambda x,y:math.sin(math.pi*y)
 BC["top"] = basic_bc
 BC["bottom"] = basic_bc 
 BC["left"] = basic_bc
