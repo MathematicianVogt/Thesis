@@ -1,34 +1,22 @@
-2017-09-12 14:05:04,829 pyclaw.solver WARNING CLAW: 340 - The custom boundary condition
-                                        function signature has been changed.
-                                        The previous signature will not be
-                                        supported in Clawpack 6.0.  Please see 
-                                        http://www.clawpack.org/pyclaw/solvers.html#change-to-custom-bc-function-signatures
-                                        for more information.
-2017-09-12 14:05:04,829 pyclaw.solver WARNING CLAW: 340 - The custom boundary condition
-                                        function signature has been changed.
-                                        The previous signature will not be
-                                        supported in Clawpack 6.0.  Please see 
-                                        http://www.clawpack.org/pyclaw/solvers.html#change-to-custom-bc-function-signatures
-                                        for more information.
-2017-09-12 14:05:04,862 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=0.0
-2017-09-12 14:05:04,862 pyclaw.controller INFO CLAW: 416 - Solution 0 computed for time t=0.000000
-2017-09-12 14:05:04,916 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=1.0
-2017-09-12 14:05:04,916 pyclaw.controller INFO CLAW: 416 - Solution 1 computed for time t=1.000000
-2017-09-12 14:05:04,968 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=2.0
-2017-09-12 14:05:04,968 pyclaw.controller INFO CLAW: 416 - Solution 2 computed for time t=2.000000
-2017-09-12 14:05:05,020 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=3.0
-2017-09-12 14:05:05,020 pyclaw.controller INFO CLAW: 416 - Solution 3 computed for time t=3.000000
-2017-09-12 14:05:05,067 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=4.0
-2017-09-12 14:05:05,067 pyclaw.controller INFO CLAW: 416 - Solution 4 computed for time t=4.000000
-2017-09-12 14:05:05,118 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=5.0
-2017-09-12 14:05:05,119 pyclaw.controller INFO CLAW: 416 - Solution 5 computed for time t=5.000000
-2017-09-12 14:05:05,182 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=6.0
-2017-09-12 14:05:05,182 pyclaw.controller INFO CLAW: 416 - Solution 6 computed for time t=6.000000
-2017-09-12 14:05:05,236 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=7.0
-2017-09-12 14:05:05,236 pyclaw.controller INFO CLAW: 416 - Solution 7 computed for time t=7.000000
-2017-09-12 14:05:05,282 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=8.0
-2017-09-12 14:05:05,282 pyclaw.controller INFO CLAW: 416 - Solution 8 computed for time t=8.000000
-2017-09-12 14:05:05,330 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=9.0
-2017-09-12 14:05:05,330 pyclaw.controller INFO CLAW: 416 - Solution 9 computed for time t=9.000000
-2017-09-12 14:05:05,382 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=10.0
-2017-09-12 14:05:05,382 pyclaw.controller INFO CLAW: 416 - Solution 10 computed for time t=10.000000
+2017-09-25 15:10:49,288 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=0.0
+2017-09-25 15:10:49,289 pyclaw.controller INFO CLAW: 416 - Solution 0 computed for time t=0.000000
+2017-09-25 15:10:49,473 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=0.1
+2017-09-25 15:10:49,473 pyclaw.controller INFO CLAW: 416 - Solution 1 computed for time t=0.100000
+2017-09-25 15:10:49,620 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=0.2
+2017-09-25 15:10:49,620 pyclaw.controller INFO CLAW: 416 - Solution 2 computed for time t=0.200000
+2017-09-25 15:10:49,772 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=0.3
+2017-09-25 15:10:49,772 pyclaw.controller INFO CLAW: 416 - Solution 3 computed for time t=0.300000
+2017-09-25 15:10:49,915 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=0.4
+2017-09-25 15:10:49,915 pyclaw.controller INFO CLAW: 416 - Solution 4 computed for time t=0.400000
+2017-09-25 15:10:50,060 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=0.5
+2017-09-25 15:10:50,060 pyclaw.controller INFO CLAW: 416 - Solution 5 computed for time t=0.500000
+2017-09-25 15:10:50,198 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=0.6
+2017-09-25 15:10:50,199 pyclaw.controller INFO CLAW: 416 - Solution 6 computed for time t=0.600000
+2017-09-25 15:10:50,330 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=0.7
+2017-09-25 15:10:50,330 pyclaw.controller INFO CLAW: 416 - Solution 7 computed for time t=0.700000
+2017-09-25 15:10:50,468 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=0.8
+2017-09-25 15:10:50,468 pyclaw.controller INFO CLAW: 416 - Solution 8 computed for time t=0.800000
+2017-09-25 15:10:50,607 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=0.9
+2017-09-25 15:10:50,607 pyclaw.controller INFO CLAW: 416 - Solution 9 computed for time t=0.900000
+2017-09-25 15:10:50,753 pyclaw.io INFO CLAW: 299 - Wrote out solution in format ascii for time t=1.0
+2017-09-25 15:10:50,753 pyclaw.controller INFO CLAW: 416 - Solution 10 computed for time t=1.000000

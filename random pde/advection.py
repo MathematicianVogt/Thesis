@@ -49,7 +49,8 @@ class advection_prob:
     def auxinit(state):
         # Initilize petsc Structures for aux
         xc=state.grid.x.centers
-        state.aux[0,:] = 100.0
+        #state.aux[0,:] = 1.0
+        state.aux[0,:] = np.random.uniform(-20.0,7.0) + 0*xc
         
     global custom_bc
     def custom_bc(state, dim, t, qbc, auxbc, num_ghost):
@@ -157,7 +158,7 @@ class advection_prob:
             #plt.plot(x,q)
             #plt.show()
 
-        a=100.0
+        a=1.0
         f = lambda x : math.exp(-x**2)
         true_sol = lambda t,x: f(x-a*t)
         global time
