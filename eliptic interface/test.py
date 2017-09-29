@@ -28,9 +28,9 @@ r=.25
 bplus=110.0
 bminus=-51.0
 
-#phi = lambda x,y : (x-xo)**2 + (y-yo)**2. - r**2
+phi = lambda x,y : math.sqrt((x-xo)**2 + (y-yo)**2) - r
 
-phi = lambda x,y : 1.0
+#phi = lambda x,y : 1.0
 def f(x,y):
 	return 500*math.sin(x*y)
 
@@ -59,8 +59,8 @@ def beta(x,y):
 
 
 p1 = elliptic(a,b,c,d,nx,ny,BC,phi,beta,sigma,f,v,w)
-p1.build_sol_regular()
-#p1.plot_interface()
+#p1.build_sol_regular()
+p1.plot_interface()
 
 # p1.plot_interface()
 # p2.plot_interface()
