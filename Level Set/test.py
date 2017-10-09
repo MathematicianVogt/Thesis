@@ -16,26 +16,51 @@ c=0
 d=1
 nx=100
 ny=100
-<<<<<<< Updated upstream
 Tmax=1
 nt=2
-=======
 Tmax=10
-nt=100000
->>>>>>> Stashed changes
+nt=10
 BC = {}
-basic_bc = lambda x,y:math.sin(math.pi*y)
+basic_bc = lambda x,y:1.0
 BC["top"] = basic_bc
 BC["bottom"] = basic_bc 
 BC["left"] = basic_bc
 BC["right"] = basic_bc
-IC = lambda x,y: x**2 + y**2
+IC = lambda x,y: 5.0
 xo = .5
 yo=.5
 r=.25
 epsilon = lambda x,y : 1.0
 mu = lambda x,y : 1.0
 #phi = lambda x,y : (x-xo)**2 + (y-yo)**2. - r**2
+
+
+
+
+
+e=1.0
+u=1.0
+dummy_dt = (Tmax)/float(nt)
+#print dummy_dt
+
+spatial_step_x=(b-a)/float(nx)
+spatial_step_y=(d-c)/float(ny)
+spatial_step_t=None
+c_max=1.0
+#our guess for time step to keep with CFL condition
+#stab short for stability
+stab = math.sqrt(spatial_step_x**2 + spatial_step_y**2)*(1.0/(dummy_dt*c_max))
+#try to take biggest time step possible, while keeping CFL condition.
+while(stab<1):
+	nt=nt*2
+	dummy_dt = (Tmax)/float(nt)
+	stab = math.sqrt(spatial_step_x**2 + spatial_step_y**2)*(1.0/(dummy_dt*c_max))
+
+spatial_step_t=dummy_dt
+
+nt = int((Tmax)/spatial_step_t)+1
+print nt
+
 
 
 phi = lambda x,y : x-.5

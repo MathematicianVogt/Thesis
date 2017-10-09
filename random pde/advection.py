@@ -25,6 +25,7 @@ from clawpack.pyclaw import plot
 import pylab as plt
 import math
 from pde import makeMoviespace
+from pde import *
 
 
 
@@ -43,14 +44,16 @@ class advection_prob:
 
         x =state.grid.x.centers
         
-        state.q[0,:] = np.exp(-x**2)
+        state.q[0,:] = np.sin(x)
 
     global auxinit
     def auxinit(state):
         # Initilize petsc Structures for aux
         xc=state.grid.x.centers
         #state.aux[0,:] = 1.0
-        state.aux[0,:] = np.random.uniform(-20.0,7.0) + 0*xc
+        state.aux[0,:] = np.random.uniform(-20.0*(1.0+xc-xc),7.0*(1.0+xc-xc))
+        plt.plot(xc,state.aux[0,:])
+        plt.show()
         
     global custom_bc
     def custom_bc(state, dim, t, qbc, auxbc, num_ghost):
@@ -103,8 +106,7 @@ class advection_prob:
         claw.solution = pyclaw.Solution(state,domain)
         claw.solver = solver
 
-        claw.tfinal = 1.0
-        claw.dt_initial=0
+        claw.tfinal = 10.0
         claw.setplot = setplot
         claw.keep_copy = True
         
@@ -162,7 +164,7 @@ class advection_prob:
         f = lambda x : math.exp(-x**2)
         true_sol = lambda t,x: f(x-a*t)
         global time
-        time =np.linspace(0.0,1.0,11)
+        time =np.linspace(0.0,10.0,11)
         print time
         print len(grid_list)
         global true_sol_list
@@ -198,8 +200,8 @@ class advection_prob:
 nx=8000
 x = advection_prob(nx)
 v= x.run()
-makeMoviespace(v[0],v[1],v[2],v[3],"Numerical Solution", "True Solution","x","u")
-
+#makeMoviespace(v[0],v[1],v[2],v[3],"Numerical Solution", "True Solution","x","u")
+makeMoviead(v[0],v[1],v[3],"Numerical Solution","x", "u")
 #-----IMPORTANT FOR CONVERGENCE RATE
 # error_lists=[]
 # for i in range(0,4):

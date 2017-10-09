@@ -35,8 +35,8 @@ def makeMovie(xList, solList,tList,title,xlab,ylab):
 		fig = plt.figure()
 		l, = plt.plot([], [], 'k-o')
 
-		plt.ylim(0, 1.1)
-		plt.xlim(xList[0]-1,xList[len(xList)-1]+1)
+		#plt.ylim(0, 1.1)
+		#plt.xlim(xList[0]-1,xList[len(xList)-1]+1)
 
 		with writer.saving(fig, title+ ".mp4", 100):
 			for i in range(0,len(tList)):
@@ -52,6 +52,34 @@ def makeMovie(xList, solList,tList,title,xlab,ylab):
 				plt.ylabel(ylab)
 				writer.grab_frame()
 				plt.clf()
+
+def makeMoviead(xList, solList1,tList,title1,xlab,ylab):
+	FFMpegWriter = manimation.writers['ffmpeg']
+	metadata = dict(title=title1, artist='Matplotlib',
+	                comment='Movie support!')
+	writer = FFMpegWriter(fps=1, metadata=metadata)
+
+	fig = plt.figure()
+	l, = plt.plot([], [], 'k-o')
+
+
+	with writer.saving(fig, title1+ ".mp4", 100):
+		for i in range(0,len(tList)):
+
+			print len(tList)
+			print len(xList)
+			x0 = xList[i]
+			y0 =solList1[i]
+
+			#plt.xlim([-15,15])
+			#plt.ylim([-2,2])
+			plt.plot(x0,y0,'-',label=title1)
+			plt.title(" Time = " + str(tList[i]))
+			plt.xlabel(xlab)
+			plt.ylabel(ylab)
+			writer.grab_frame()
+			plt.clf()
+
 def makeMoviespace(xList, solList1,solList2,tList,title1,title2,xlab,ylab):
 		FFMpegWriter = manimation.writers['ffmpeg']
 		metadata = dict(title=title1, artist='Matplotlib',
