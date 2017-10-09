@@ -111,12 +111,13 @@ class maxwell_plot:
 		
 
 		FFMpegWriter = manimation.writers['ffmpeg']
-		metadata = dict(title=title, artist='Matplotlib',
+		metadata = dict(title=filename, artist='Matplotlib',
 		                comment='Movie support!')
 		writer = FFMpegWriter(fps=60, metadata=metadata)
 		fig=plt.figure()
 		with writer.saving(fig, filename+ ".mp4", 100):
 			for i in range(0,len(self.t_list)):
+				print "ploting .... t = " + str(self.t_list[i])
 				
 				fulltime=self.t_list[i]
 				halftime=self.t_list_shift[i]
@@ -134,7 +135,7 @@ class maxwell_plot:
 				plt.title(r"$E_x(x,y,t) : t=$" + str(fulltime))
 
 				plt.subplot(133)
-				plt.pcolor(x3,y3,ey_sol[i],cmap=default_cmap)
+				plt.pcolor(x2,y2,ey_sol[i],cmap=default_cmap)
 				plt.colorbar()
 				#plt.contour(x3,y3,ey_interface_func(x3,y3),[1])
 				plt.title(r"$E_y(x,y,t) : t=$" + str(fulltime))
@@ -158,12 +159,13 @@ class maxwell_plot:
 
 
 		FFMpegWriter = manimation.writers['ffmpeg']
-		metadata = dict(title=title, artist='Matplotlib',
+		metadata = dict(title=filename, artist='Matplotlib',
 		                comment='Movie support!')
 		writer = FFMpegWriter(fps=60, metadata=metadata)
 		fig=plt.figure()
 		with writer.saving(fig, filename+ ".mp4", 100):
 			for i in range(0,len(self.t_list)):
+				print "ploting .... t = " + str(self.t_list[i])
 				
 				fulltime=self.t_list[i]
 				halftime=self.t_list_shift[i]

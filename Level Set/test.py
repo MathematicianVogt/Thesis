@@ -38,6 +38,38 @@ mu = lambda x,y : 1.0
 
 
 
+BC_ex={}
+BC_ey={}
+BC_hz={}
+
+IC_ex = lambda x,y: x+y
+IC_ey = lambda x,y: x+y
+IC_hz = lambda x,y: x+y
+
+
+BC_ex["top"] = lambda x,t : x+1.0+t
+BC_ex["bottom"] = lambda x,t : x+t
+BC_ex["left"] = lambda y,t :y+t
+BC_ex["right"] = lambda y,t :1.0+y+t
+
+BC_ey["top"] = lambda x,t : x+1.0-t
+BC_ey["bottom"] = lambda x,t : x-t
+BC_ey["left"] = lambda y,t :y-t
+BC_ey["right"] = lambda y,t :1.0+y-t
+
+
+BC_hz["top"] = lambda x,t : x+1.0
+BC_hz["bottom"] = lambda x,t : x
+BC_hz["left"] = lambda y,t :y
+BC_hz["right"] = lambda y,t :1.0+y
+
+
+
+
+
+
+
+
 e=1.0
 u=1.0
 dummy_dt = (Tmax)/float(nt)
@@ -46,6 +78,8 @@ dummy_dt = (Tmax)/float(nt)
 spatial_step_x=(b-a)/float(nx)
 spatial_step_y=(d-c)/float(ny)
 spatial_step_t=None
+
+#CHANGE LATER FOR CFL CONDITION TO BE HOLDING!!!!!!!!!!!!!!!!!!!!!!
 c_max=1.0
 #our guess for time step to keep with CFL condition
 #stab short for stability
@@ -58,7 +92,7 @@ while(stab<1):
 
 spatial_step_t=dummy_dt
 
-nt = int((Tmax)/spatial_step_t)+1
+nt = int((Tmax)/spatial_step_t)+100
 print nt
 
 
@@ -67,21 +101,22 @@ phi = lambda x,y : x-.5
 #phi = lambda x,y : y-.5
 
 
-p1 = ex(a,b,c,d,nx,ny,Tmax,nt,BC,IC,phi,epsilon,mu)
-p2 = ey(a,b,c,d,nx,ny,Tmax,nt,BC,IC,phi,epsilon,mu)
+p1 = ex(a,b,c,d,nx,ny,Tmax,nt,BC_ex,IC_ex,phi,epsilon,mu)
+p2 = ey(a,b,c,d,nx,ny,Tmax,nt,BC_ey,IC_ey,phi,epsilon,mu)
 p3 = ez(a,b,c,d,nx,ny,Tmax,nt,BC,IC,phi,epsilon,mu)
 p4 = hx(a,b,c,d,nx,ny,Tmax,nt,BC,IC,phi,epsilon,mu)
 p5 = hy(a,b,c,d,nx,ny,Tmax,nt,BC,IC,phi,epsilon,mu)
-p6 = hz(a,b,c,d,nx,ny,Tmax,nt,BC,IC,phi,epsilon,mu)
+p6 = hz(a,b,c,d,nx,ny,Tmax,nt,BC_hz,IC_hz,phi,epsilon,mu)
 
 t1 = time_mesh(Tmax,nt)
 t2 =time_mesh(Tmax,2*nt)
 
 a =solution(p1,p2,p3,p4,p5,p6,t1,t2)
 a.solve_TE()
-a.solve_TM()
+#a.solve_TM()
 maxwellplot=maxwell_plot(p1,p2,p3,p4,p5,p6,Tmax,nt)
-maxwellplot.plot_contour("movielol")
+#maxwellplot.plot_contour("movielol")
+maxwellplot.plot_contour_TE("Solution Movie")
 
 # p1.plot_interface()
 # p2.plot_interface()
