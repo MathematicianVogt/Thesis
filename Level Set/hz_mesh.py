@@ -31,7 +31,7 @@ class hz:
 		self.ysize=len(self.y)-1
 		self.xx,self.yy = np.meshgrid(self.x[:-1], self.y[:-1], indexing = 'ij')
 		self.mesh = (self.xx,self.yy)
-		self.time_mesh = time_mesh(Tmax,2*nt)
+		self.time_mesh = time_mesh(Tmax,nt)
 		self.dt = (self.time_mesh.time_step())
 		self.hz_sol=[]
 		self.IC=IC
@@ -41,6 +41,8 @@ class hz:
 		self.epsilon=epsilon
 		self.mu=mu
 		self.BC=BCs
+		self.dx = self.x_list[1]-self.x_list[0]
+		self.dy = self.y_list[1] - self.x_list[0]
 
 	def get_phi(self):
 		return self.phi
@@ -57,10 +59,10 @@ class hz:
 	def add_ic(self):
 		x1=self.xsize
 		x2=self.ysize
-		IC_cond = np.zeros((x1,x2))
-		for i in range(0,self.xsize):
-			for j in range(0,self.ysize):	
-				IC_cond[i,j] = self.IC(self.x_list[i],self.y_list[j])
+		IC_cond = np.zeros((x2,x1))
+		for i in range(0,self.ysize):
+			for j in range(0,self.xsize):	
+				IC_cond[i,j] = self.IC(self.x_list[j],self.y_list[i])
 		self.hz_sol.append(IC_cond)
 
 	def enforce_boundary_conditons(self, t):
@@ -71,7 +73,7 @@ class hz:
 		right=bc["right"]
 		bottom=bc["bottom"]
 
-		new_sol_boundary_conditions_enforced=np.zeros((self.xsize,self.ysize))
+		new_sol_boundary_conditions_enforced=np.zeros((self.ysize,self.xsize))
 
 		# for i in range(0,self.xsize):
 		# 	for j in range(0,self.ysize):
@@ -126,15 +128,15 @@ class hz:
 	# 	dy=(self.y[1]-self.y[0])
 	# 	return (dx,dy)
 	def build_sol_regular(self,t,ex,ey):
-		(dx,dy) = self.h()
+		(dx,dy) = (self.dx,self.dy)
 		mu=self.mu
 		epsilon=self.epsilon
 		dt =self.dt
 		previous_hz = self.hz_sol[-1]
 		hz = self.enforce_boundary_conditons(t)
-		for i in range(0,len(self.x)-1):
-			for j in range(0,len(self.y)-1):
-				hz[i,j] = previous_hz[i,j] + (dt/mu(self.x_list[i],self.y_list[j]))*((ex[i,j+1] -ex[i,j])/dy - (ey[i+1,j]  - ey[i,j])/dx )
+		for i in range(0,len(self.y)-1):
+			for j in range(0,len(self.x)-1):
+				hz[i,j] = previous_hz[i,j] + (dt/mu(self.x_list[j],self.y_list[i]))*((ex[i+1,j] -ex[i,j])/dy - (ey[i,j+1]  - ey[i,j])/dx )
 		self.hz_sol.append(hz)
 
 	def previous_sol(self):

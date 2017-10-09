@@ -89,6 +89,7 @@ while(stab<1):
 	nt=nt*2
 	dummy_dt = (Tmax)/float(nt)
 	stab = math.sqrt(spatial_step_x**2 + spatial_step_y**2)*(1.0/(dummy_dt*c_max))
+	print stab
 
 spatial_step_t=dummy_dt
 

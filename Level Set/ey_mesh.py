@@ -38,6 +38,8 @@ class ey:
 		self.epsilon=epsilon
 		self.mu=mu
 		self.BC=BCs
+		self.dx = self.x_list[1]-self.x_list[0]
+		self.dy = self.y_list[1] - self.x_list[0]
 	def get_phi(self):
 		return self.phi
 	def get_sol(self):
@@ -52,10 +54,10 @@ class ey:
 	def add_ic(self):
 		x1=self.xsize
 		x2=self.ysize
-		IC_cond = np.zeros((x1,x2))
-		for i in range(0,self.xsize):
-			for j in range(0,self.ysize):	
-				IC_cond[i,j] = self.IC(self.x_list[i],self.y_list[j])
+		IC_cond = np.zeros((x2,x1))
+		for i in range(0,self.ysize):
+			for j in range(0,self.xsize):	
+				IC_cond[i,j] = self.IC(self.x_list[j],self.y_list[i])
 		self.ey_sol.append(IC_cond)
 
 	def enforce_boundary_conditons(self, t):
@@ -66,14 +68,14 @@ class ey:
 		right=bc["right"]
 		bottom=bc["bottom"]
 
-		new_sol_boundary_conditions_enforced=np.zeros((self.xsize,self.ysize))
+		new_sol_boundary_conditions_enforced=np.zeros((self.ysize,self.xsize))
 
-		for i in range(0,self.xsize):
-			for j in range(0,self.ysize):
+		for i in range(0,self.ysize):
+			for j in range(0,self.xsize):
 
 				#left_bc
-				if(i==0 and j>=0):
-					new_sol_boundary_conditions_enforced[i,j] = left(self.y_list[j],t)
+				if(j==0 and i>=0):
+					new_sol_boundary_conditions_enforced[i,j] = left(self.y_list[i],t)
 					
 				# #bottom BC
 				# if(j==0 and i>=0):
@@ -83,8 +85,8 @@ class ey:
 				# if(j==self.ysize-1 and i>=0):
 				# 	new_sol_boundary_conditions_enforced[i,j] = top(self.x_list[i],t)
 				#right bc
-				if(i==self.xsize-1 and j>=0):
-					new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[j],t)
+				if(j==self.ysize-1 and i>=0):
+					new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[i],t)
 
 		return new_sol_boundary_conditions_enforced
 
@@ -121,15 +123,15 @@ class ey:
 	# 	dy=(self.y[1]-self.y[0])
 	# 	return (dx,dy)
 	def build_sol_regular(self,t,hz):
-		(dx,dy) = self.h()
+		(dx,dy) = (self.dx,self.dy)
 		mu=self.mu
 		epsilon=self.epsilon
 		dt =self.dt
 		previous_ey = self.ey_sol[-1]
 		ey = self.enforce_boundary_conditons(t)
-		for i in range(1,len(self.x_list)-1):
-			for j in range(0,len(self.y_list)-1):
-				ey[i,j] = previous_ey[i,j] - (dt/(epsilon(self.x_list[i],self.y_list[j])*dx))*(hz[i,j] - hz[i-1,j])
+		for i in range(0,len(self.y_list)-1):
+			for j in range(1,len(self.x_list)-1):
+				ey[i,j] = previous_ey[i,j] - (dt/(epsilon(self.x_list[j],self.y_list[i])*dx))*(hz[i,j] - hz[i,j-1])
 		self.ey_sol.append(ey)
 	def previous_sol(self):
 		return self.ey_sol[-1]
