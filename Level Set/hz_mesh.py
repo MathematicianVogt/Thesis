@@ -42,7 +42,7 @@ class hz:
 		self.mu=mu
 		self.BC=BCs
 		self.dx = self.x_list[1]-self.x_list[0]
-		self.dy = self.y_list[1] - self.x_list[0]
+		self.dy = self.y_list[1] - self.y_list[0]
 
 	def get_phi(self):
 		return self.phi
@@ -137,6 +137,7 @@ class hz:
 		for i in range(0,len(self.y)-1):
 			for j in range(0,len(self.x)-1):
 				hz[i,j] = previous_hz[i,j] + (dt/mu(self.x_list[j],self.y_list[i]))*((ex[i+1,j] -ex[i,j])/dy - (ey[i,j+1]  - ey[i,j])/dx )
+				print hz[i,j]
 		self.hz_sol.append(hz)
 
 	def previous_sol(self):

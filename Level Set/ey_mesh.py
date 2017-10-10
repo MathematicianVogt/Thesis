@@ -39,7 +39,7 @@ class ey:
 		self.mu=mu
 		self.BC=BCs
 		self.dx = self.x_list[1]-self.x_list[0]
-		self.dy = self.y_list[1] - self.x_list[0]
+		self.dy = self.y_list[1] - self.y_list[0]
 	def get_phi(self):
 		return self.phi
 	def get_sol(self):
@@ -132,6 +132,7 @@ class ey:
 		for i in range(0,len(self.y_list)-1):
 			for j in range(1,len(self.x_list)-1):
 				ey[i,j] = previous_ey[i,j] - (dt/(epsilon(self.x_list[j],self.y_list[i])*dx))*(hz[i,j] - hz[i,j-1])
+				print ey[i,j]
 		self.ey_sol.append(ey)
 	def previous_sol(self):
 		return self.ey_sol[-1]
