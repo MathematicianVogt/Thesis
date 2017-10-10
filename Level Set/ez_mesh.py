@@ -36,6 +36,8 @@ class ez:
 		self.epsilon=epsilon
 		self.mu=mu
 		self.BC=BCs
+		self.dx = self.x_list[1]-self.x_list[0]
+		self.dy = self.y_list[1] - self.y_list[0]
 	def get_phi(self):
 		return self.phi
 	def get_sol(self):
@@ -76,18 +78,18 @@ class ez:
 				# print self.ysize
 				#left_bc
 				if(j==0 and i>=0):
-					new_sol_boundary_conditions_enforced[i,j] = left(self.y_list[i],t)
+					new_sol_boundary_conditions_enforced[i,j] = left(self.y_list[i],t+self.dt)
 					
 				#bottom BC
 				if(i==0 and j>=0):
-					new_sol_boundary_conditions_enforced[i,j] = bottom(self.x_list[j],t)
+					new_sol_boundary_conditions_enforced[i,j] = bottom(self.x_list[j],t+self.dt)
 
 				#top BC
 				if(i==self.ysize-1 and j>=0):
-					new_sol_boundary_conditions_enforced[i,j] = top(self.x_list[j],t)
+					new_sol_boundary_conditions_enforced[i,j] = top(self.x_list[j],t+self.dt)
 				#right bc
 				if(j==self.xsize-1 and i>=0):
-					new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[i],t)
+					new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[i],t+self.dt)
 		#print np.shape(new_sol_boundary_conditions_enforced)
 	
 		return new_sol_boundary_conditions_enforced

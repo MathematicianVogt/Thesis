@@ -83,11 +83,11 @@ class ex:
 					
 				#bottom BC
 				if(i==0 and j>=0):
-					new_sol_boundary_conditions_enforced[i,j] = bottom(self.x_list[j],t)
+					new_sol_boundary_conditions_enforced[i,j] = bottom(self.x_list[j],t+self.dt)
 
 				#top BC
 				if(i==self.ysize-1 and j>=0):
-					new_sol_boundary_conditions_enforced[i,j] = top(self.x_list[j],t)
+					new_sol_boundary_conditions_enforced[i,j] = top(self.x_list[j],t+self.dt)
 				# #right bc
 				# if(i==self.xsize-1 and j>=0):
 				# 	new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[j],t)

@@ -42,7 +42,7 @@ class hz:
 		self.mu=mu
 		self.BC=BCs
 		self.dx = self.x_list[1]-self.x_list[0]
-		self.dy = self.y_list[1] - self.x_list[0]
+		self.dy = self.y_list[1] - self.y_list[0]
 
 	def get_phi(self):
 		return self.phi

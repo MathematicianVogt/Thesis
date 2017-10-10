@@ -14,7 +14,7 @@ class solution:
 		ey=self.ey_mesh
 		hz = self.hz_mesh
 
-		for n in range(1,self.time_mesh.size()):
+		for n in range(0,self.time_mesh.size()):
 			print "Time: " + str(self.time_mesh.get_time_location(n))
 			pex = ex.previous_sol()
 			pey= ey.previous_sol()
@@ -32,7 +32,7 @@ class solution:
 		hx=self.hx_mesh
 		hy=self.hy_mesh
 		ez=self.ez_mesh
-		for n in range(1,self.time_mesh.size()):
+		for n in range(0,self.time_mesh.size()):
 			print "Time: " + str(self.time_mesh.get_time_location(n))
 			phx = hx.previous_sol()
 			phy= hy.previous_sol()

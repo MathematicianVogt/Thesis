@@ -30,7 +30,7 @@ class hy:
 		self.xx,self.yy = np.meshgrid(self.x[:-1], self.y, indexing = 'ij')
 		time.sleep(5)
 		self.mesh = (self.xx,self.yy)
-		self.time_mesh = time_mesh(Tmax,nt*2)
+		self.time_mesh = time_mesh(Tmax,nt)
 		self.dt = (self.time_mesh.time_step())
 		self.hy_sol=[]
 		self.IC=IC
@@ -41,7 +41,7 @@ class hy:
 		self.mu=mu
 		self.BC=BCs
 		self.dx = self.x_list[1]-self.x_list[0]
-		self.dy = self.y_list[1] - self.x_list[0]
+		self.dy = self.y_list[1] - self.y_list[0]
 
 	def get_phi(self):
 		return self.phi
@@ -85,11 +85,11 @@ class hy:
 					
 				#bottom BC
 				if(i==0 and j>=0):
-					new_sol_boundary_conditions_enforced[i,j] = bottom(self.x_list[j],t)
+					new_sol_boundary_conditions_enforced[i,j] = bottom(self.x_list[j],t+ self.dt/2.0)
 
 				#top BC
 				if(i==self.ysize-1 and j>=0):
-					new_sol_boundary_conditions_enforced[i,j] = top(self.x_list[j],t)
+					new_sol_boundary_conditions_enforced[i,j] = top(self.x_list[j],t+ self.dt/2.0)
 				# #right bc
 				# if(i==self.xsize-1 and j>=0):
 				# 	new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[j],t)

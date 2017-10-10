@@ -39,7 +39,7 @@ class ey:
 		self.mu=mu
 		self.BC=BCs
 		self.dx = self.x_list[1]-self.x_list[0]
-		self.dy = self.y_list[1] - self.x_list[0]
+		self.dy = self.y_list[1] - self.y_list[0]
 	def get_phi(self):
 		return self.phi
 	def get_sol(self):
@@ -75,7 +75,7 @@ class ey:
 
 				#left_bc
 				if(j==0 and i>=0):
-					new_sol_boundary_conditions_enforced[i,j] = left(self.y_list[i],t)
+					new_sol_boundary_conditions_enforced[i,j] = left(self.y_list[i],t+self.dt)
 					
 				# #bottom BC
 				# if(j==0 and i>=0):
@@ -86,7 +86,7 @@ class ey:
 				# 	new_sol_boundary_conditions_enforced[i,j] = top(self.x_list[i],t)
 				#right bc
 				if(j==self.ysize-1 and i>=0):
-					new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[i],t)
+					new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[i],t+self.dt)
 
 		return new_sol_boundary_conditions_enforced
 
