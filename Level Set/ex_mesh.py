@@ -58,10 +58,10 @@ class ex:
 	def add_ic(self):
 		x1=self.xsize
 		x2=self.ysize
-		IC_cond = np.zeros((x2,x1))
-		for i in range(0,self.ysize):
-			for j in range(0,self.xsize):	
-				IC_cond[i,j] = self.IC(self.x_list[j],self.y_list[i])
+		IC_cond = np.zeros((x1,x2))
+		for i in range(0,self.xsize):
+			for j in range(0,self.ysize):	
+				IC_cond[i,j] = self.IC(self.x_list[i],self.y_list[j])
 		self.ex_sol.append(IC_cond)
 
 	def enforce_boundary_conditons(self, t):
@@ -72,22 +72,22 @@ class ex:
 		right=bc["right"]
 		bottom=bc["bottom"]
 
-		new_sol_boundary_conditions_enforced=np.zeros((self.ysize,self.xsize))
+		new_sol_boundary_conditions_enforced=np.zeros((self.xsize,self.ysize))
 
-		for i in range(0,self.ysize):
-			for j in range(0,self.xsize):
+		for i in range(0,self.xsize):
+			for j in range(0,self.ysize):
 
 				# #left_bc
 				# if(i==0 and j>=0):
 				# 	new_sol_boundary_conditions_enforced[i,j] = left(self.y_list[j],t)
 					
 				#bottom BC
-				if(i==0 and j>=0):
-					new_sol_boundary_conditions_enforced[i,j] = bottom(self.x_list[j],t+self.dt)
+				if(j==0 and i>=0):
+					new_sol_boundary_conditions_enforced[i,j] = bottom(self.x_list[i],t+self.dt)
 
 				#top BC
-				if(i==self.ysize-1 and j>=0):
-					new_sol_boundary_conditions_enforced[i,j] = top(self.x_list[j],t+self.dt)
+				if(j==self.ysize-1 and i>=0):
+					new_sol_boundary_conditions_enforced[i,j] = top(self.x_list[i],t+self.dt)
 				# #right bc
 				# if(i==self.xsize-1 and j>=0):
 				# 	new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[j],t)
@@ -136,11 +136,10 @@ class ex:
 		# print np.shape(ex)
 		# print self.xsize
 		# print self.ysize
-		for i in range(1,len(self.y_list)-1):
-			for j in range(0,len(self.x_list)-1):
-				ex[i,j] = previous_ex[i,j] + (dt/(epsilon(self.x_list[j],self.y_list[i])*dy))*(hz[i,j] - hz[i-1,j])
+		for i in range(0,len(self.x_list)-1):
+			for j in range(1,len(self.y_list)-1):
+				ex[i,j] = previous_ex[i,j] + (dt/(epsilon(self.x_list[i],self.y_list[j])*dy))*(hz[i,j] - hz[i,j-1])
 		self.ex_sol.append(ex)
-
 	def previous_sol(self):
 		return self.ex_sol[-1]
 class phi_ex:

@@ -54,10 +54,10 @@ class hx:
 	def add_ic(self):
 		x1=self.xsize
 		x2=self.ysize
-		IC_cond = np.zeros((x2,x1))
-		for i in range(0,self.ysize):
-			for j in range(0,self.xsize):	
-				IC_cond[i,j] = self.IC(self.x_list[j],self.y_list[i])
+		IC_cond = np.zeros((x1,x2))
+		for i in range(0,self.xsize):
+			for j in range(0,self.ysize):	
+				IC_cond[i,j] = self.IC(self.x_list[i],self.y_list[j])
 		self.hx_sol.append(IC_cond)
 
 	def enforce_boundary_conditons(self, t):
@@ -68,14 +68,13 @@ class hx:
 		right=bc["right"]
 		bottom=bc["bottom"]
 
-		new_sol_boundary_conditions_enforced=np.zeros((self.ysize,self.xsize))
+		new_sol_boundary_conditions_enforced=np.zeros((self.xsize,self.ysize))
 
-		for i in range(0,self.ysize):
-			for j in range(0,self.xsize):
-
+		for i in range(0,self.xsize):
+			for j in range(0,self.ysize):
 				#left_bc
-				if(j==0 and i>=0):
-					new_sol_boundary_conditions_enforced[i,j] = left(self.y_list[i],t + self.dt/2.0)
+				if(i==0 and j>=0):
+					new_sol_boundary_conditions_enforced[i,j] = left(self.y_list[j],t + self.dt/2.0)
 					
 				# #bottom BC
 				# if(j==0 and i>=0):
@@ -85,8 +84,8 @@ class hx:
 				# if(j==self.ysize-1 and i>=0):
 				# 	new_sol_boundary_conditions_enforced[i,j] = top(self.x_list[i],t)
 				#right bc
-				if(j==self.xsize-1 and i>=0):
-					new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[i],t+ self.dt/2.0)
+				if(i==self.xsize-1 and j>=0):
+					new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[j],t+ self.dt/2.0)
 
 		return new_sol_boundary_conditions_enforced
 
@@ -130,9 +129,9 @@ class hx:
 		previous_hx = self.hx_sol[-1]
 		hx = self.enforce_boundary_conditons(t)
 		
-		for i in range(0,len(self.y_list)-1):
-			for j in range(1,len(self.x_list)-1):
-				hx[i,j] = previous_hx[i,j] - (dt/(mu(self.x_list[j],self.y_list[i])*dy))*(ez[i+1,j] - ez[i,j])
+		for i in range(1,len(self.x_list)-1):
+			for j in range(0,len(self.y_list)-1):
+				hx[i,j] = previous_hx[i,j] - (dt/(mu(self.x_list[i],self.y_list[j])*dy))*(ez[i,j+1] - ez[i,j])
 		self.hx_sol.append(hx)
 
 	def previous_sol(self):

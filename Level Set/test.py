@@ -14,10 +14,10 @@ a=0
 b=1
 c=0
 d=1
-nx=100
-ny=100
+nx=50
+ny=50
 Tmax=1
-nt=2
+nt=5
 Tmax=10
 nt=10
 BC = {}
@@ -93,7 +93,7 @@ while(stab<1):
 
 spatial_step_t=dummy_dt
 
-nt = int((Tmax)/spatial_step_t)+100
+nt = int((Tmax)/spatial_step_t)+10000
 print nt
 
 

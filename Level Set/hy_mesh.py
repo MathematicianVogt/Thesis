@@ -28,7 +28,6 @@ class hy:
 		self.xsize = len(self.x)-1
 		self.ysize=len(self.y)
 		self.xx,self.yy = np.meshgrid(self.x[:-1], self.y, indexing = 'ij')
-		time.sleep(5)
 		self.mesh = (self.xx,self.yy)
 		self.time_mesh = time_mesh(Tmax,nt)
 		self.dt = (self.time_mesh.time_step())
@@ -58,10 +57,10 @@ class hy:
 	def add_ic(self):
 		x1=self.xsize
 		x2=self.ysize
-		IC_cond = np.zeros((x2,x1))
-		for i in range(0,self.ysize):
-			for j in range(0,self.xsize):	
-				IC_cond[i,j] = self.IC(self.x_list[j],self.y_list[i])
+		IC_cond = np.zeros((x1,x2))
+		for i in range(0,self.xsize):
+			for j in range(0,self.ysize):	
+				IC_cond[i,j] = self.IC(self.x_list[i],self.y_list[j])
 		
 		self.hy_sol.append(IC_cond)
 
@@ -73,23 +72,23 @@ class hy:
 		right=bc["right"]
 		bottom=bc["bottom"]
 
-		new_sol_boundary_conditions_enforced=np.zeros((self.ysize,self.xsize))
+		new_sol_boundary_conditions_enforced=np.zeros((self.xsize,self.ysize))
 		# print self.xsize
 		# print self.ysize
-		for i in range(0,self.ysize):
-			for j in range(0,self.xsize):
+		for i in range(0,self.xsize):
+			for j in range(0,self.ysize):
 
 				# #left_bc
 				# if(i==0 and j>=0):
 				# 	new_sol_boundary_conditions_enforced[i,j] = left(self.y_list[j],t)
 					
 				#bottom BC
-				if(i==0 and j>=0):
-					new_sol_boundary_conditions_enforced[i,j] = bottom(self.x_list[j],t+ self.dt/2.0)
+				if(j==0 and i>=0):
+					new_sol_boundary_conditions_enforced[i,j] = bottom(self.x_list[i],t+ self.dt/2.0)
 
 				#top BC
-				if(i==self.ysize-1 and j>=0):
-					new_sol_boundary_conditions_enforced[i,j] = top(self.x_list[j],t+ self.dt/2.0)
+				if(j==self.ysize-1 and i>=0):
+					new_sol_boundary_conditions_enforced[i,j] = top(self.x_list[i],t+ self.dt/2.0)
 				# #right bc
 				# if(i==self.xsize-1 and j>=0):
 				# 	new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[j],t)
@@ -136,8 +135,8 @@ class hy:
 		previous_hy = self.hy_sol[-1]
 		hy = self.enforce_boundary_conditons(t)
 		
-		for i in range(1,len(self.y_list)-1):
-			for j in range(0,len(self.x_list)-1):
+		for i in range(0,len(self.x_list)-1):
+			for j in range(1,len(self.y_list)-1):
 				# print "----"
 				# print len(self.x_list)
 				# print len(self.y_list)
@@ -147,7 +146,7 @@ class hy:
 				# print "fuck"
 				# print np.shape(ez)
 				# time.sleep(ez)
-				hy[i,j] = previous_hy[i,j] + (dt/(mu(self.x_list[j],self.y_list[i])*dx))*(ez[i,j+1] - ez[i,j])
+				hy[i,j] = previous_hy[i,j] + (dt/(mu(self.x_list[i],self.y_list[j])*dx))*(ez[i+1,j] - ez[i,j])
 
 		self.hy_sol.append(hy)
 
