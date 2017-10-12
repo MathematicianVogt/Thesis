@@ -138,6 +138,8 @@ class ey:
 		self.ey_sol.append(ey)
 	def previous_sol(self):
 		return self.ey_sol[-1]
+	def ex_for_hz(self,i,j)
+		sol = self.previous_sol()
 
 
 class phi_ey:

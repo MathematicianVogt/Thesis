@@ -142,6 +142,12 @@ class ex:
 		self.ex_sol.append(ex)
 	def previous_sol(self):
 		return self.ex_sol[-1]
+	def ex_for_hz(self,i,j)
+		sol = self.previous_sol()
+		return sol[]
+
+
+
 class phi_ex:
 	def __init__(self,phi,mesh):
 		self.phi=phi

@@ -142,6 +142,10 @@ class hz:
 
 	def previous_sol(self):
 		return self.hz_sol[-1]
+		
+	def hz_for_ey(self,i,j)
+		sol = self.previous_sol()
+
 
 class phi_hz:
 	def __init__(self,phi,mesh):

@@ -14,14 +14,14 @@ class solution:
 		ey=self.ey_mesh
 		hz = self.hz_mesh
 
-		for n in range(0,self.time_mesh.size()):
+		for n in range(0,self.time_mesh.size()-1):
 			print "Time: " + str(self.time_mesh.get_time_location(n))
-			pex = ex.previous_sol()
-			pey= ey.previous_sol()
 			phz = hz.previous_sol()
 			t = self.time_mesh.get_time_location(n)
 			ex.build_sol_regular(t,phz)
 			ey.build_sol_regular(t,phz)
+			pex = ex.previous_sol()
+			pey= ey.previous_sol()
 			hz.build_sol_regular(t,pex,pey)
 
 
@@ -32,12 +32,12 @@ class solution:
 		hx=self.hx_mesh
 		hy=self.hy_mesh
 		ez=self.ez_mesh
-		for n in range(0,self.time_mesh.size()):
+		for n in range(0,self.time_mesh.size()-1):
 			print "Time: " + str(self.time_mesh.get_time_location(n))
-			phx = hx.previous_sol()
-			phy= hy.previous_sol()
 			pez = ez.previous_sol()
 			t = self.time_mesh.get_time_location(n)
 			hx.build_sol_regular(t,pez)
 			hy.build_sol_regular(t,pez)
+			phx = hx.previous_sol()
+			phy= hy.previous_sol()
 			ez.build_sol_regular(t,phx,phy)
