@@ -16,13 +16,14 @@ class solution:
 
 		for n in range(0,self.time_mesh.size()-1):
 			print "Time: " + str(self.time_mesh.get_time_location(n))
-			phz = hz.previous_sol()
 			t = self.time_mesh.get_time_location(n)
-			ex.build_sol_regular(t,phz)
-			ey.build_sol_regular(t,phz)
 			pex = ex.previous_sol()
 			pey= ey.previous_sol()
 			hz.build_sol_regular(t,pex,pey)
+			phz = hz.previous_sol()
+			ex.build_sol_regular(t,phz)
+			ey.build_sol_regular(t,phz)
+			
 
 
 

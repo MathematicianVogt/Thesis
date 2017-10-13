@@ -16,11 +16,12 @@ class maxwell_plot:
 		self.hz=hz
 		self.t_list = np.linspace(0,Tmax,nt)
 		self.t_list_shift = [x + (self.t_list[1]-self.t_list[0])/2.0 for x in self.t_list]
+		self.t_list_shift = self.t_list_shift[:-1]
 		
 
 
 	def plot_contour(self,filename):
-		default_cmap='hot'
+		default_cmap=''
 		print "Starting to Plot Contour Plot All....."
 		(x1,y1,ex_sol) = self.ex.get_sol()
 		ex_interface_func = self.ex.get_phi()
@@ -49,7 +50,10 @@ class maxwell_plot:
 		writer = FFMpegWriter(fps=60, metadata=metadata)
 		fig=plt.figure()
 		with writer.saving(fig, filename+ ".mp4", 100):
-			for i in range(0,len(self.t_list)):
+			
+
+
+			for i in range(0,len(self.t_list)-1):
 				print "ploting .... t = " + str(self.t_list[i])
 				fulltime=self.t_list[i+1]
 				halftime=self.t_list_shift[i]
@@ -114,29 +118,62 @@ class maxwell_plot:
 		metadata = dict(title=filename, artist='Matplotlib',
 		                comment='Movie support!')
 		writer = FFMpegWriter(fps=60, metadata=metadata)
+		
+
 		fig=plt.figure()
+		z_min=-20.0
+		z_max=20.0
+
 		with writer.saving(fig, filename+ ".mp4", 100):
-			for i in range(0,len(self.t_list)):
+			
+			plt.subplot(131)
+			plt.pcolor(x5,y5,hz_sol[0],cmap=default_cmap)
+			#plt.contour(x5,y5,hz_interface_func(x5,y5),[1])
+			plt.colorbar()
+			
+			plt.title(r"$H_z(x,y,t) : t=$0")
+
+			plt.subplot(132)
+			plt.pcolor(x1,y1,ex_sol[0],cmap=default_cmap)
+			#plt.contour(x1,y1,ey_interface_func(x1,y1),[1])
+			plt.colorbar()
+			
+			plt.title(r"$E_x(x,y,t) : t=$0")
+
+			plt.subplot(133)
+			plt.pcolor(x2,y2,ey_sol[0],cmap=default_cmap)
+			plt.colorbar()
+			
+			#plt.contour(x3,y3,ey_interface_func(x3,y3),[1])
+			plt.title(r"$E_y(x,y,t) : t=$0" )
+			writer.grab_frame()
+			plt.clf()
+
+
+			for i in range(1,len(self.t_list)):
 				print "ploting .... t = " + str(self.t_list[i])
 				
 				fulltime=self.t_list[i]
-				halftime=self.t_list_shift[i]
+				halftime=self.t_list_shift[i-1]
 				
 				plt.subplot(131)
 				plt.pcolor(x5,y5,hz_sol[i],cmap=default_cmap)
 				#plt.contour(x5,y5,hz_interface_func(x5,y5),[1])
 				plt.colorbar()
+				
 				plt.title(r"$H_z(x,y,t) : t=$" + str(halftime))
 
 				plt.subplot(132)
 				plt.pcolor(x1,y1,ex_sol[i],cmap=default_cmap)
 				#plt.contour(x1,y1,ey_interface_func(x1,y1),[1])
 				plt.colorbar()
+				
 				plt.title(r"$E_x(x,y,t) : t=$" + str(fulltime))
 
 				plt.subplot(133)
 				plt.pcolor(x2,y2,ey_sol[i],cmap=default_cmap)
 				plt.colorbar()
+				
 				#plt.contour(x3,y3,ey_interface_func(x3,y3),[1])
 				plt.title(r"$E_y(x,y,t) : t=$" + str(fulltime))
 

@@ -93,7 +93,7 @@ while(stab<1):
 
 spatial_step_t=dummy_dt
 
-nt = int((Tmax)/spatial_step_t)+10000
+nt = int((Tmax)/spatial_step_t)+1000
 print nt
 
 
@@ -117,7 +117,7 @@ a.solve_TE()
 #a.solve_TM()
 maxwellplot=maxwell_plot(p1,p2,p3,p4,p5,p6,Tmax,nt)
 #maxwellplot.plot_contour("movielol")
-maxwellplot.plot_contour_TE("Solution Movie")
+maxwellplot.plot_contour_TE("Solution Movielul")
 
 # p1.plot_interface()
 # p2.plot_interface()

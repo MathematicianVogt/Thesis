@@ -138,13 +138,11 @@ class hz:
 			for j in range(0,len(self.y)-1):
 				hz[i,j] = previous_hz[i,j] + (dt/mu(self.x_list[i],self.y_list[j]))*((ex[i,j+1] -ex[i,j])/dy - (ey[i+1,j]  - ey[i,j])/dx )
 		self.hz_sol.append(hz)
-		print hz
+		#print hz
 
 	def previous_sol(self):
 		return self.hz_sol[-1]
 		
-	def hz_for_ey(self,i,j)
-		sol = self.previous_sol()
 
 
 class phi_hz:
