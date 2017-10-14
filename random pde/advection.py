@@ -52,8 +52,6 @@ class advection_prob:
         xc=state.grid.x.centers
         #state.aux[0,:] = 1.0
         state.aux[0,:] = np.random.uniform(-20.0*(1.0+xc-xc),7.0*(1.0+xc-xc))
-        plt.plot(xc,state.aux[0,:])
-        plt.show()
         
     global custom_bc
     def custom_bc(state, dim, t, qbc, auxbc, num_ghost):

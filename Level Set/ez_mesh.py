@@ -36,6 +36,8 @@ class ez:
 		self.epsilon=epsilon
 		self.mu=mu
 		self.BC=BCs
+		self.dx = self.x_list[1]-self.x_list[0]
+		self.dy = self.y_list[1] - self.y_list[0]
 	def get_phi(self):
 		return self.phi
 	def get_sol(self):
@@ -51,10 +53,10 @@ class ez:
 	def add_ic(self):
 		x1=self.xsize
 		x2=self.ysize
-		IC_cond = np.zeros((x2,x1))
-		for i in range(0,self.ysize):
-			for j in range(0,self.xsize):	
-				IC_cond[i,j] = self.IC(self.x_list[j],self.y_list[i])
+		IC_cond = np.zeros((x1,x2))
+		for i in range(0,self.xsize):
+			for j in range(0,self.ysize):	
+				IC_cond[i,j] = self.IC(self.x_list[i],self.y_list[j])
 		self.ez_sol.append(IC_cond)
 		# print np.shape(IC_cond)
 		# time.sleep(2)
@@ -67,27 +69,27 @@ class ez:
 		right=bc["right"]
 		bottom=bc["bottom"]
 		# print (self.xsize,self.ysize)
-		new_sol_boundary_conditions_enforced=np.zeros((self.ysize,self.xsize))
+		new_sol_boundary_conditions_enforced=np.zeros((self.xsize,self.ysize))
 
 
-		for i in range(0,self.ysize):
-			for j in range(0,self.xsize):
+		for i in range(0,self.xsize):
+			for j in range(0,self.ysize):
 				# print self.xsize
 				# print self.ysize
 				#left_bc
-				if(j==0 and i>=0):
-					new_sol_boundary_conditions_enforced[i,j] = left(self.y_list[i],t)
+				if(i==0 and j>=0):
+					new_sol_boundary_conditions_enforced[i,j] = left(self.y_list[j],t+self.dt)
 					
 				#bottom BC
-				if(i==0 and j>=0):
-					new_sol_boundary_conditions_enforced[i,j] = bottom(self.x_list[j],t)
+				if(j==0 and i>=0):
+					new_sol_boundary_conditions_enforced[i,j] = bottom(self.x_list[i],t+self.dt)
 
 				#top BC
-				if(i==self.ysize-1 and j>=0):
-					new_sol_boundary_conditions_enforced[i,j] = top(self.x_list[j],t)
+				if(j==self.ysize-1 and i>=0):
+					new_sol_boundary_conditions_enforced[i,j] = top(self.x_list[i],t+self.dt)
 				#right bc
-				if(j==self.xsize-1 and i>=0):
-					new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[i],t)
+				if(i==self.xsize-1 and j==0):
+					new_sol_boundary_conditions_enforced[i,j] = right(self.y_list[j],t+self.dt)
 		#print np.shape(new_sol_boundary_conditions_enforced)
 	
 		return new_sol_boundary_conditions_enforced
@@ -144,9 +146,10 @@ class ez:
 		dt =self.dt
 		previous_ez = self.ez_sol[-1]
 		ez = self.enforce_boundary_conditons(t)
-		for i in range(1,len(self.y_list)-1):
-			for j in range(1,len(self.x_list)-1):
-				ez[i,j] = previous_ez[i,j] + (dt/(epsilon(self.x_list[j],self.y_list[i])))*((hy[i,j] - hy[i,j-1])/dx  - (hx[i,j] - hx[i-1,j])/dy )
+		for i in range(1,len(self.x_list)-1):
+			for j in range(1,len(self.y_list)-1):
+				ez[i,j] = previous_ez[i,j] + (dt/(epsilon(self.x_list[j],self.y_list[i])))*((hy[i,j] - hy[i-1,j])/dx  - (hx[i,j] - hx[i,j-1])/dy )
+				print ez[i,j]
 		self.ez_sol.append(ez)
 class phi_ez:
 	def __init__(self,phi,mesh):

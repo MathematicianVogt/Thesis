@@ -59,10 +59,10 @@ class hz:
 	def add_ic(self):
 		x1=self.xsize
 		x2=self.ysize
-		IC_cond = np.zeros((x2,x1))
-		for i in range(0,self.ysize):
-			for j in range(0,self.xsize):	
-				IC_cond[i,j] = self.IC(self.x_list[j],self.y_list[i])
+		IC_cond = np.zeros((x1,x2))
+		for i in range(0,self.xsize):
+			for j in range(0,self.ysize):	
+				IC_cond[i,j] = self.IC(self.x_list[i],self.y_list[j])
 		self.hz_sol.append(IC_cond)
 
 	def enforce_boundary_conditons(self, t):
@@ -73,7 +73,7 @@ class hz:
 		right=bc["right"]
 		bottom=bc["bottom"]
 
-		new_sol_boundary_conditions_enforced=np.zeros((self.ysize,self.xsize))
+		new_sol_boundary_conditions_enforced=np.zeros((self.xsize,self.ysize))
 
 		# for i in range(0,self.xsize):
 		# 	for j in range(0,self.ysize):
@@ -134,14 +134,23 @@ class hz:
 		dt =self.dt
 		previous_hz = self.hz_sol[-1]
 		hz = self.enforce_boundary_conditons(t)
+<<<<<<< HEAD
 		for i in range(0,len(self.y)-1):
 			for j in range(0,len(self.x)-1):
 				hz[i,j] = previous_hz[i,j] + (dt/mu(self.x_list[j],self.y_list[i]))*((ex[i+1,j] -ex[i,j])/dy - (ey[i,j+1]  - ey[i,j])/dx )
 				print hz[i,j]
+=======
+		for i in range(0,len(self.x)-1):
+			for j in range(0,len(self.y)-1):
+				hz[i,j] = previous_hz[i,j] + (dt/mu(self.x_list[i],self.y_list[j]))*((ex[i,j+1] -ex[i,j])/dy - (ey[i+1,j]  - ey[i,j])/dx )
+>>>>>>> origin/master
 		self.hz_sol.append(hz)
+		#print hz
 
 	def previous_sol(self):
 		return self.hz_sol[-1]
+		
+
 
 class phi_hz:
 	def __init__(self,phi,mesh):
