@@ -21,7 +21,7 @@ class maxwell_plot:
 
 
 	def plot_contour(self,filename):
-		default_cmap=''
+		default_cmap='hot'
 		print "Starting to Plot Contour Plot All....."
 		(x1,y1,ex_sol) = self.ex.get_sol()
 		ex_interface_func = self.ex.get_phi()
@@ -121,27 +121,27 @@ class maxwell_plot:
 		
 
 		fig=plt.figure()
-		z_min=-20.0
-		z_max=20.0
+		z_min=-9.0
+		z_max=13.0
 
 		with writer.saving(fig, filename+ ".mp4", 100):
 			
 			plt.subplot(131)
-			plt.pcolor(x5,y5,hz_sol[0],cmap=default_cmap)
+			plt.pcolor(x5,y5,hz_sol[0],cmap=default_cmap,vmin=z_min,vmax=z_max)
 			#plt.contour(x5,y5,hz_interface_func(x5,y5),[1])
 			plt.colorbar()
 			
 			plt.title(r"$H_z(x,y,t) : t=$0")
 
 			plt.subplot(132)
-			plt.pcolor(x1,y1,ex_sol[0],cmap=default_cmap)
+			plt.pcolor(x1,y1,ex_sol[0],cmap=default_cmap,vmin=z_min,vmax=z_max)
 			#plt.contour(x1,y1,ey_interface_func(x1,y1),[1])
 			plt.colorbar()
 			
 			plt.title(r"$E_x(x,y,t) : t=$0")
 
 			plt.subplot(133)
-			plt.pcolor(x2,y2,ey_sol[0],cmap=default_cmap)
+			plt.pcolor(x2,y2,ey_sol[0],cmap=default_cmap,vmin=z_min,vmax=z_max)
 			plt.colorbar()
 			
 			#plt.contour(x3,y3,ey_interface_func(x3,y3),[1])
@@ -157,21 +157,21 @@ class maxwell_plot:
 				halftime=self.t_list_shift[i-1]
 				
 				plt.subplot(131)
-				plt.pcolor(x5,y5,hz_sol[i],cmap=default_cmap)
+				plt.pcolor(x5,y5,hz_sol[i],cmap=default_cmap,vmin=z_min,vmax=z_max)
 				#plt.contour(x5,y5,hz_interface_func(x5,y5),[1])
 				plt.colorbar()
 				
 				plt.title(r"$H_z(x,y,t) : t=$" + str(halftime))
 
 				plt.subplot(132)
-				plt.pcolor(x1,y1,ex_sol[i],cmap=default_cmap)
+				plt.pcolor(x1,y1,ex_sol[i],cmap=default_cmap,vmin=z_min,vmax=z_max)
 				#plt.contour(x1,y1,ey_interface_func(x1,y1),[1])
 				plt.colorbar()
 				
 				plt.title(r"$E_x(x,y,t) : t=$" + str(fulltime))
 
 				plt.subplot(133)
-				plt.pcolor(x2,y2,ey_sol[i],cmap=default_cmap)
+				plt.pcolor(x2,y2,ey_sol[i],cmap=default_cmap,vmin=z_min,vmax=z_max)
 				plt.colorbar()
 				
 				#plt.contour(x3,y3,ey_interface_func(x3,y3),[1])

@@ -117,7 +117,7 @@ a.solve_TE()
 #a.solve_TM()
 maxwellplot=maxwell_plot(p1,p2,p3,p4,p5,p6,Tmax,nt)
 #maxwellplot.plot_contour("movielol")
-maxwellplot.plot_contour_TE("Solution Movielul")
+maxwellplot.plot_contour_TE("TESOL")
 
 # p1.plot_interface()
 # p2.plot_interface()
